@@ -1,6 +1,6 @@
 const CACHE = 'mdq-v1';
 const ASSETS = [
-  './mizuho_daily_quest.html',
+  './index.html',
   './manifest.json',
   './icon.svg'
 ];

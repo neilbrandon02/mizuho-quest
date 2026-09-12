@@ -2,7 +2,7 @@
   "name": "Mizuho Daily Quest",
   "short_name": "Daily Quest",
   "description": "Daily Capital Markets, Japanese, and Trivia questions for the Mizuho team.",
-  "start_url": "./mizuho_daily_quest.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0d1117",
   "theme_color": "#0d1117",
