@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -197,6 +197,21 @@ hr{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
   transition:background .15s,border-color .15s,color .15s;
 }
 .study-cat-btn.active{color:var(--text);border-color:var(--gold);background:rgba(245,158,11,.12)}
+.jap-drop{position:relative;display:inline-flex}
+.jap-drop-panel{
+  position:absolute;top:calc(100% + 6px);left:0;z-index:20;
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:.35rem;display:flex;flex-direction:column;gap:.15rem;min-width:130px;
+  box-shadow:0 4px 16px rgba(0,0,0,.4);
+}
+.jap-opt{
+  display:flex;align-items:center;gap:.4rem;padding:.3rem .55rem;border-radius:6px;
+  cursor:pointer;font-size:.78rem;font-weight:600;border:none;
+  background:transparent;color:var(--muted);width:100%;text-align:left;
+  transition:background .12s,color .12s;
+}
+.jap-opt:hover{background:var(--surface);color:var(--text)}
+.jap-overlay{position:fixed;inset:0;z-index:10;cursor:default}
 .mock-count-btn{
   background:var(--surface2);border:1px solid var(--border);border-radius:8px;
   color:var(--muted);cursor:pointer;font-size:.88rem;font-weight:500;padding:.55rem .75rem;
@@ -441,7 +456,7 @@ hr{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
     {"q":"What does the kanji '水' (mizu/sui) mean?","type":"mc","options":["Fire","Wood","Water","Earth"],"answer":2,"explanation":"水 (mizu) = water. One of five Chinese elements (wood, fire, earth, metal, water). Appears in: Suiyoubi (水曜日, Wednesday — water day), suiei (水泳, swimming), mizu (plain cold water), omizu (お水, water offered politely). The kanji 水 is a pictograph of flowing water — traced to ancient oracle bone script over 3,000 years ago."},
     {"q":"What does the kanji '火' (hi/ka) mean?","type":"mc","options":["Sun","Water","Tree","Fire"],"answer":3,"explanation":"火 (hi or ka) = fire. Appears in: Kayoubi (火曜日, Tuesday — fire day), kazan (火山, volcano — fire mountain), hanabi (花火, fireworks — flower fire), kaji (火事, fire/blaze). The kanji 火 is a pictograph of flames. Japanese New Year fireworks (hanabi taikai) are celebrated nationwide in summer."},
     {"q":"What does the kanji '日' (hi/nichi/bi) mean?","type":"mc","options":["Moon","Person","Star","Sun / Day"],"answer":3,"explanation":"日 (hi, nichi, or bi) = sun or day. The most versatile kanji — appears in: Japan (日本, Nihon), Sunday (日曜日, Nichiyoubi), diary (日記, nikki), today (今日, kyou), daily (毎日, mainichi). As a pictograph, it originated as a circle with a dot representing the sun. Japanese reads days of the month using 日: 1日 (tsuitachi), 2日 (futsuka), etc."},
-    {"q":"What does the kanji '月' (tsuki/gatsu) mean?","type":"mc","options":["Star","Sun","Moon / Month","Year"],"answer":2,"explanation":"月 (tsuki or gatsu) = moon or month. Months are named ichi-gatsu (一月, January = 1st month) through juni-gatsu (十二月, December). Monday = Getsuyoubi (月曜日, moon day). The kanji 月 appears in 月給 (gekkyuu, monthly salary), 毎月 (maisuki, every month), 先月 (sengetsu, last month)."},
+    {"q":"What does the kanji '月' (tsuki/gatsu) mean?","type":"mc","options":["Star","Sun","Moon / Month","Year"],"answer":2,"explanation":"月 (tsuki or gatsu) = moon or month. Months are named ichi-gatsu (一月, January = 1st month) through juni-gatsu (十二月, December). Monday = Getsuyoubi (月曜日, moon day). The kanji 月 appears in 月給 (gekkyuu, monthly salary), 毎月 (maitsuki, every month), 先月 (sengetsu, last month)."},
     {"q":"What does 'ao' (青) mean in Japanese?","type":"mc","options":["Red","Yellow","Blue / Green","White"],"answer":2,"explanation":"'Ao' (青) covers both blue and green — a single color term for what English splits into two. Traffic lights in Japan are officially called 'ao' (青信号) even though they appear green. This reflects the historical Japanese color system before Chinese influence introduced 'midori' (緑) for green. Modern Japanese uses both, but 'ao' remains dominant for signals, the sky, and the sea."},
     {"q":"What does 'kiiro' (黄色) mean?","type":"mc","options":["Orange","White","Green","Yellow"],"answer":3,"explanation":"'Kiiro' (黄色) = yellow. 黄 (ki) = yellow, 色 (iro) = color. Used for caution signs, school zone markings, and autumn leaves (koyo). The yellow handkerchief is a Japanese symbol of waiting for someone's return (from the famous 1977 film 'The Yellow Handkerchief'). As a standalone adjective: 'kiiroi' (黄色い)."},
     {"q":"How do you say 'Tuesday' in Japanese?","type":"mc","options":["Getsuyoubi","Suiyoubi","Mokuyoubi","Kayoubi"],"answer":3,"explanation":"Kayoubi (火曜日) = Tuesday. 火 (ka) = fire. Japanese days map to seven celestial/elemental bodies: moon (Mon), fire (Tue), water (Wed), wood (Thu), metal (Fri), earth (Sat), sun (Sun). These correspond to the ancient seven-luminaries system shared across East Asian cultures. Fire's association with Tuesday likely comes via Chinese astronomical tradition."},
@@ -461,7 +476,56 @@ hr{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
     {"q":"What does the kanji '土' (tsuchi/do) mean?","type":"mc","options":["Water","Fire","Tree","Earth / Soil"],"answer":3,"explanation":"土 (tsuchi or do) = earth or soil. Appears in: Doyoubi (土曜日, Saturday — earth day), tochi (土地, land/property), dodai (土台, foundation), dozou (土蔵, earthen storehouse). The kanji 土 is a simple pictograph — a mound of earth. In the five-element system (wood, fire, earth, metal, water), earth is the central balancing element."},
     {"q":"What does 'kuru' (来る) mean?","type":"mc","options":["To go","To eat","To return","To come"],"answer":3,"explanation":"'Kuru' (来る) = to come — one of Japanese's two irregular verbs. Polite form: 'kimasu.' Key contrasting pair: 'iku' (行く, to go — away from speaker) vs 'kuru' (来る, to come — toward speaker). The farewell ritual 'Ittekimasu / Itterasshai' (I'm going and coming back / Please go and come back) uses both concepts in daily Japanese life."},
     {"q":"What does the Japanese suffix '-san' (さん) indicate?","type":"mc","options":["It means 'three' when counting","A honorific title equivalent to Mr./Ms./Mrs. — used to show respect","It indicates the person is a doctor","It's used only for children"],"answer":1,"explanation":"'-San' (さん) is the most common Japanese honorific — appended to names to show respect, equivalent to Mr., Ms., or Mrs. in English. It's gender-neutral and used in most social contexts. Other honorifics: '-kun' (for younger males/subordinates), '-chan' (for children/close friends), '-sama' (very formal), '-sensei' (for teachers/doctors/experts)."},
-    {"q":"How do you say 'delicious' in Japanese?","type":"mc","options":["Kawaii","Kirei","Oishii","Sugoi"],"answer":2,"explanation":"'Oishii' (おいしい / 美味しい) means delicious or tasty. It's one of the most enthusiastic compliments you can give Japanese food. Related: 'mazui' (まずい) = bad-tasting. When tasting something great, Japanese people often say 'Oishii!' spontaneously. Another common expression: 'Umai!' (うまい) — more casual, also means delicious or skillful."}
+    {"q":"How do you say 'delicious' in Japanese?","type":"mc","options":["Kawaii","Kirei","Oishii","Sugoi"],"answer":2,"explanation":"'Oishii' (おいしい / 美味しい) means delicious or tasty. It's one of the most enthusiastic compliments you can give Japanese food. Related: 'mazui' (まずい) = bad-tasting. When tasting something great, Japanese people often say 'Oishii!' spontaneously. Another common expression: 'Umai!' (うまい) — more casual, also means delicious or skillful."},
+    {"q":"What does the Japanese particle 'wa' (は) indicate?","type":"mc","options":["The object of the sentence","The location where an action occurs","The topic of the sentence","The direction of movement"],"answer":2,"explanation":"'Wa' (は) is the topic marker — it marks what the sentence is ABOUT. 'Watashi wa gakusei desu' = As for me, I am a student. Different from the subject marker 'ga' (が): 'ga' introduces new information or emphasizes the subject; 'wa' handles known or contrasted topics. The wa/ga distinction is one of Japanese grammar's most nuanced aspects."},
+    {"q":"What does the Japanese particle 'o' / 'wo' (を) indicate?","type":"mc","options":["The topic","The direction","The time","The direct object of a verb"],"answer":3,"explanation":"'O' (を, also written 'wo') marks the direct object — the thing receiving the action. 'Sushi o taberu' = eat sushi; 'Nihongo o hanasu' = speak Japanese; 'hon o yomu' = read a book. In modern Japanese, を is only used as the object marker; it's pronounced 'o' in standard Tokyo Japanese, not 'wo.'"},
+    {"q":"What does 'desu' (です) and 'masu' (ます) signal in Japanese?","type":"mc","options":["Past tense for all verbs","Negative sentences","Polite/formal register — added to make speech or writing more respectful","Indicating future actions only"],"answer":2,"explanation":"'Desu' ends noun and adjective sentences politely (in place of the plain copula 'da'); 'masu' ends verb sentences politely. Dropping them to the plain form (da/dictionary form) is casual. This desu/masu style is called 'teineigo' — the baseline polite form taught first to all Japanese learners and used in business, with strangers, and in formal contexts."},
+    {"q":"In the sentence 'ねこ が います' (neko ga imasu), what role does the particle が (ga) play?","type":"mc","options":["It marks the destination","It marks the subject of the sentence","It marks possession","It marks the object"],"answer":1,"explanation":"が (ga) is the subject marker particle. 'ねこがいます' = 'There is a cat.' While は (wa) is the topic marker, が specifically highlights the subject — often used when introducing new information or answering 'who/what' questions. Compare: 'ねこはいます' (As for the cat, it exists) vs 'ねこがいます' (A cat exists — there's one!)."},
+    {"q":"Which particle would correctly complete: '図書館___本を読みます' (I read books at the library)?","type":"mc","options":["は","が","で","へ"],"answer":2,"explanation":"で (de) marks the location where an action takes place. '図書館で本を読みます' = 'I read books at the library.' Contrast with に (ni), which marks existence location (図書館に本があります = There are books in the library). で can also mark the means/tool: 'バスで行きます' (I go by bus)."},
+    {"q":"What does 'これは田中さん___本です' (Kore wa Tanaka-san ___ hon desu) mean, and which particle fills the blank?","type":"mc","options":["も — 'This is also a book'","が — 'This is the book that Tanaka-san likes'","の — 'This is Tanaka-san's book'","で — 'This is a book by Tanaka-san's means'"],"answer":2,"explanation":"の (no) shows possession and modification: 'これは田中さんの本です' = 'This is Tanaka-san's book.' の is extremely versatile — it can also link nouns as modifiers (日本の車 = Japanese car, literally 'Japan's car'). It is one of the most frequent particles in Japanese and appears in many N5 sentences."},
+    {"q":"A friend says: 'わたしも行きます' (Watashi mo ikimasu). What does も (mo) indicate?","type":"mc","options":["The speaker is unsure whether they will go","The speaker is also going (in addition to someone else)","The speaker is going to a special place","The speaker is going for the first time"],"answer":1,"explanation":"も (mo) means 'also' or 'too.' 'わたしも行きます' = 'I am also going.' It replaces は or が when adding the same fact about another topic. Example: 'すしが好きです。ラーメンも好きです' = 'I like sushi. I also like ramen.' も can stack: 'Aも Bも' means 'both A and B.'"},
+    {"q":"Which sentence correctly uses へ (e) to express direction?","type":"mc","options":["駅で行きます","駅が行きます","駅へ行きます","駅の行きます"],"answer":2,"explanation":"へ (e) is the direction particle meaning 'toward' or 'to.' '駅へ行きます' = 'I go to(ward) the station.' It is interchangeable with に for destinations in most cases, but へ emphasizes the direction of travel rather than the endpoint. Common in phrases like '東京へようこそ' (Welcome to Tokyo)."},
+    {"q":"What does '今日' (kyou) mean?","type":"mc","options":["Yesterday","Tomorrow","Today","This week"],"answer":2,"explanation":"今日 (きょう, kyou) = today. The kanji combine 今 (ima = now) + 日 (hi/nichi = day/sun), literally 'the current day.' Note the unusual reading — 今 alone reads 'ima' but in 今日 it reads 'kyo.' Related time words: 今週 (konshuu = this week), 今月 (kongetsu = this month), 今年 (kotoshi = this year)."},
+    {"q":"You make plans for the next day. Which word means 'tomorrow' in Japanese?","type":"mc","options":["昨日 (kinou)","今日 (kyou)","明日 (ashita)","来週 (raishuu)"],"answer":2,"explanation":"明日 (あした, ashita) = tomorrow. The kanji 明 (bright/clear) + 日 (day/sun) suggest 'the bright coming day.' It can also be read 'myounichi' in formal or written contexts. Opposites: 昨日 (kinou) = yesterday; 今日 (kyou) = today. 'あした学校へ行きます' = 'I will go to school tomorrow.'"},
+    {"q":"Which kanji compound means 'yesterday'?","type":"mc","options":["今日","明日","昨日","来日"],"answer":2,"explanation":"昨日 (きのう, kinou) = yesterday. The kanji 昨 means 'yesterday/previous' and appears in 昨年 (sakunen = last year) and 昨夜 (sakuya = last night). '昨日何を食べましたか' = 'What did you eat yesterday?' Note: 昨日 is read 'kinou' in speech but 'sakujitsu' in very formal writing."},
+    {"q":"Your friend asks '今、何時ですか?' What are they asking?","type":"mc","options":["What time is it now?","Where are you now?","What are you doing now?","How do you feel now?"],"answer":0,"explanation":"今 (いま, ima) = now. '今、何時ですか' = 'What time is it now?' 今 appears in many useful combinations: 今日 (kyou = today), 今週 (konshuu = this week), 今月 (kongetsu = this month), 今年 (kotoshi = this year). As a standalone word, ima is very natural in conversation: '今いそがしいです' = 'I'm busy right now.'"},
+    {"q":"What does うち (uchi) most commonly refer to in everyday Japanese conversation?","type":"mc","options":["School","One's own home or house","The office","A convenience store"],"answer":1,"explanation":"うち (uchi) means 'home' or 'my place,' and can be written as 家. It carries a sense of belonging — 'my/our home.' '家に帰ります' = 'I return home.' うち also means 'inside/within' in other contexts (うちに = while/within). Compare with いえ (ie), a more neutral word for house/building. うち feels warm and personal."},
+    {"q":"学校 (gakkou) is a very common word for N5 students. What does it mean?","type":"mc","options":["Library","Hospital","School","Post office"],"answer":2,"explanation":"学校 (がっこう, gakkou) = school. 学 (gaku) = study/learning, 校 (kou) = school building/institution. Compounds with 学: 学生 (gakusei = student), 大学 (daigaku = university), 小学校 (shougakkou = elementary school), 中学校 (chuugakkou = middle school), 高校 (koukou = high school). '学校へ行きます' = 'I go to school.'"},
+    {"q":"You need to catch a train. Which word refers to a train station?","type":"mc","options":["病院 (byouin)","図書館 (toshokan)","駅 (eki)","空港 (kuukou)"],"answer":2,"explanation":"駅 (えき, eki) = train station. It is one of the most essential words for getting around Japan. '駅はどこですか' = 'Where is the station?' '駅へ行きます' = 'I'm going to the station.' The kanji 駅 depicts a horse station (post road relay point) — modernized to mean railway station. Common compounds: 終点 (shuuten = last stop), 乗り換え (norikae = transfer)."},
+    {"q":"What does 店 (みせ, mise) mean?","type":"mc","options":["Park","Museum","Shop or store","School"],"answer":2,"explanation":"店 (みせ, mise) = shop / store. You'll see it in: コンビニの店 (convenience store), お店 (o-mise, polite form), and many compound words like 食料品店 (shokuryouhin-ten = grocery store), 本屋 (hon-ya = bookstore). 'あの店で買いました' = 'I bought it at that shop.' The suffix -ya (屋) also often means a type of shop: 花屋 (hana-ya = flower shop)."},
+    {"q":"Which season is represented by 春 (haru)?","type":"mc","options":["Summer","Autumn","Winter","Spring"],"answer":3,"explanation":"春 (はる, haru) = spring. It is associated with cherry blossoms (桜, sakura) and new beginnings — the Japanese school and fiscal year both start in April (spring). 春一番 (haruichiban) is the name of the first strong south wind of spring. The kanji shows 春 with the element for 'sun' (日) at the bottom, evoking warmth returning."},
+    {"q":"The kanji 夏 is read 'natsu.' What does it mean?","type":"mc","options":["Spring","Summer","Autumn","Winter"],"answer":1,"explanation":"夏 (なつ, natsu) = summer. Japan's summer is famous for its heat and humidity, festivals (夏祭り, natsu matsuri), fireworks (花火, hanabi), and Obon (お盆) — a Buddhist tradition of honoring ancestors. '夏が好きです' = 'I like summer.' Compound: 夏休み (natsuyasumi) = summer vacation."},
+    {"q":"Which word means 'autumn' or 'fall' in Japanese?","type":"mc","options":["冬 (fuyu)","春 (haru)","秋 (aki)","夏 (natsu)"],"answer":2,"explanation":"秋 (あき, aki) = autumn / fall. Famous for autumn leaves (紅葉, kouyou), harvest moon (お月見, o-tsukimi), and cool weather. The proverb '食欲の秋' (shokuyoku no aki = autumn of appetite) captures the season's association with good food. '秋になりました' = 'It has become autumn.'"},
+    {"q":"If a Japanese friend complains '冬は寒いです' (fuyu wa samui desu), what are they saying?","type":"mc","options":["Summer is hot.","Spring is windy.","Winter is cold.","Autumn is colorful."],"answer":2,"explanation":"冬 (ふゆ, fuyu) = winter. 寒い (samui) = cold (used for weather/ambient temperature). '冬は寒いです' = 'Winter is cold.' Contrast 寒い (samui = cold outside) with 冷たい (tsumetai = cold to the touch, like cold water). Compound: 冬休み (fuyuyasumi) = winter vacation (including New Year holidays in Japan)."},
+    {"q":"雨 (ame) is a common word in Japanese weather conversation. What does it mean?","type":"mc","options":["Snow","Wind","Rain","Cloud"],"answer":2,"explanation":"雨 (あめ, ame) = rain. The kanji 雨 is a pictograph showing raindrops falling from a cloud. '今日は雨です' = 'It is rainy today.' Common compounds: 雨天 (uten = rainy weather), 大雨 (oame = heavy rain), 小雨 (kosame = light rain/drizzle), 梅雨 (tsuyu = rainy season in early summer). 雨具 (amagusa) = rain gear."},
+    {"q":"What natural weather phenomenon does 雪 (yuki) refer to?","type":"mc","options":["Rain","Snow","Fog","Thunder"],"answer":1,"explanation":"雪 (ゆき, yuki) = snow. '雪が降っています' = 'It is snowing.' Japan's northern regions (Hokkaido, Niigata) are famous for heavy snowfall. 雪 is also a common female given name. Compounds: 大雪 (ooyuki = heavy snow), 初雪 (hatsuyuki = first snow of the season), 雪だるま (yukidaruma = snowman). The kanji combines 雨 (rain) + a lower element suggesting sweeping."},
+    {"q":"Your Japanese weather app shows '晴れ' (hare). What weather should you expect?","type":"mc","options":["Rain","Cloudy skies","Sunny and clear","Snow"],"answer":2,"explanation":"晴れ (はれ, hare) = sunny / clear weather. '今日は晴れです' = 'It is sunny today.' The verb form 晴れる (hareru) means 'to clear up.' Opposite: 曇り (kumori = cloudy), 雨 (ame = rain). In common speech: '晴れた日' (hareta hi = a clear day). 晴れ can also mean 'festive/formal' — 晴れ着 (haregi) = formal clothes for special occasions."},
+    {"q":"How do you say 'father' (someone else's, or in polite speech) in Japanese?","type":"mc","options":["お兄さん (oniisan)","お父さん (otousan)","お母さん (okaasan)","おじさん (ojisan)"],"answer":1,"explanation":"お父さん (おとうさん, otousan) = father (polite/referential form used when talking about someone else's father or addressing your own in direct speech). When referring to your own father to others, Japanese speakers often use 父 (chichi). '田中さんのお父さんはどこですか' = 'Where is Mr. Tanaka's father?' The お- prefix adds politeness. 父 (chichi) = my father (humble); お父さん = your/their father (respectful)."},
+    {"q":"Which word means 'mother' in Japanese (used when referring to someone else's mother)?","type":"mc","options":["妹 (imouto)","お姉さん (oneesan)","お母さん (okaasan)","おばさん (obasan)"],"answer":2,"explanation":"お母さん (おかあさん, okaasan) = mother (polite/referential form). Your own mother is 母 (haha) when speaking to others. 'お母さんはいますか' = 'Is your mother there?' Memory tip: the 'kaa' sound is like a baby's call — similar to 'mama' sounds across cultures. Contrast with おばさん (obasan = aunt/middle-aged woman) — the long 'aa' vs short 'a' matters!"},
+    {"q":"If someone introduces their お兄さん (oniisan), who are they introducing?","type":"mc","options":["Younger brother","Older sister","Older brother","Father"],"answer":2,"explanation":"お兄さん (おにいさん, oniisan) = older brother (when referring to someone else's). Your own older brother is 兄 (ani). Japanese distinguishes older vs younger siblings: 兄/お兄さん (older brother), 弟 (otouto = younger brother), 姉/お姉さん (older sister), 妹 (imouto = younger sister). This hierarchy reflects the importance of seniority in Japanese family and social culture."},
+    {"q":"What does 妹 (imouto) mean?","type":"mc","options":["Older sister","Younger brother","Younger sister","Mother"],"answer":2,"explanation":"妹 (いもうと, imouto) = younger sister. Unlike お兄さん/お姉さん, 妹 and 弟 (otouto = younger brother) typically do NOT use the honorific お- prefix when referring to your own siblings. '妹が二人います' = 'I have two younger sisters.' The full sibling set: 兄 (ani = older brother), 弟 (otouto = younger brother), 姉 (ane = older sister), 妹 (imouto = younger sister)."},
+    {"q":"The kanji 目 (me) refers to which part of the body?","type":"mc","options":["Ear","Mouth","Nose","Eye"],"answer":3,"explanation":"目 (め, me) = eye. The kanji is a pictograph of an eye turned sideways. '目が大きいですね' = 'You have big eyes, don't you!' Compounds: 目薬 (megusuri = eye drops), 目覚まし (mezamashi = alarm clock, literally 'eye-awakener'), 一目 (hitome = one glance). The on-yomi 'moku' appears in compounds like 目的 (mokuteki = purpose/goal)."},
+    {"q":"Which kanji represents 'hand' in Japanese?","type":"mc","options":["足 (ashi)","手 (te)","耳 (mimi)","口 (kuchi)"],"answer":1,"explanation":"手 (て, te) = hand. The kanji is a pictograph showing a hand with fingers. '手を洗ってください' = 'Please wash your hands.' Compounds: 手紙 (tegami = letter, literally 'hand paper'), 上手 (jouzu = skilled, literally 'upper hand'), 下手 (heta = unskilled), 手伝う (tetsudau = to help). The word 手 is incredibly productive in Japanese vocabulary."},
+    {"q":"What is the meaning of the verb 読む (yomu)?","type":"mc","options":["To write","To listen","To read","To speak"],"answer":2,"explanation":"読む (よむ, yomu) = to read. '本を読みます' = 'I read a book.' The polite form is 読みます (yomimasu). It uses the particle を (wo) to mark the object being read. Related: 読み方 (yomikata = how to read), 音読み (on-yomi = Chinese reading of kanji), 訓読み (kun-yomi = Japanese reading of kanji). 読書 (dokusho) = reading (as a hobby)."},
+    {"q":"A student says '漢字を書きます' (Kanji wo kakimasu). What are they doing?","type":"mc","options":["Reading kanji","Writing kanji","Learning kanji","Forgetting kanji"],"answer":1,"explanation":"書く (かく, kaku) = to write. '漢字を書きます' = 'I write kanji.' Polite form: 書きます (kakimasu). Note that 書く shares pronunciation with 描く (kaku = to draw/paint) but uses a different kanji. Compounds: 書類 (shorui = documents), 教科書 (kyoukasho = textbook), 書道 (shodou = calligraphy). '書いてください' = 'Please write it.'"},
+    {"q":"聞く (kiku) has multiple meanings. Which of the following is NOT one of them?","type":"mc","options":["To listen","To hear","To ask","To see"],"answer":3,"explanation":"聞く (きく, kiku) means to listen, to hear, OR to ask — but NOT to see (that's 見る, miru). '音楽を聞きます' = 'I listen to music.' '先生に聞きます' = 'I ask the teacher.' This triple meaning makes it very useful. The kanji 聞 shows an ear (耳) inside a gate (門) — like eavesdropping! Related: 聞こえます (kikoemasu = can be heard)."},
+    {"q":"Which verb means 'to sleep' in Japanese?","type":"mc","options":["起きる (okiru)","寝る (neru)","食べる (taberu)","来る (kuru)"],"answer":1,"explanation":"寝る (ねる, neru) = to sleep / to lie down. '何時に寝ますか' = 'What time do you go to sleep?' Polite form: 寝ます (nemasu). Related: 寝室 (shinshitsu = bedroom), 昼寝 (hirune = afternoon nap). The opposite is 起きる (okiru = to wake up / get up). 'もう寝ます' = 'I'm going to sleep now' — a common phrase before bed."},
+    {"q":"What does the verb 起きる (okiru) mean?","type":"mc","options":["To sleep","To eat","To wake up / get up","To go out"],"answer":2,"explanation":"起きる (おきる, okiru) = to wake up / to get up. '毎朝六時に起きます' = 'I wake up at 6 every morning.' Polite form: 起きます (okimasu). 起きる also means 'to happen/occur' — an event 'wakes up': '事故が起きた' = 'An accident occurred.' The kanji 起 combines 走 (run) + 己 (self) — the idea of rousing oneself into motion."},
+    {"q":"What does ご飯 (gohan) primarily refer to in Japanese?","type":"mc","options":["Tea","Fish","Rice / a meal","Bread"],"answer":2,"explanation":"ご飯 (ごはん, gohan) = cooked rice, OR a meal in general. '朝ご飯' (asagohan) = breakfast, '昼ご飯' (hirugohan) = lunch, '晩ご飯' (bangohan) = dinner. The prefix ご- is an honorific. Rice is so central to Japanese culture that the word for rice doubles as the word for 'meal.' '今日のご飯は何ですか' = 'What's today's meal?'"},
+    {"q":"When a Japanese person says 'お水をください' (o-mizu wo kudasai), what are they requesting?","type":"mc","options":["Hot tea","A glass of milk","Water","A snack"],"answer":2,"explanation":"水 (みず, mizu) = water. 'お水をください' = 'Please give me water / Water, please.' This is a natural phrase at restaurants. The お- makes it polite. Cold water is typically served free at restaurants in Japan. Contrast: お湯 (oyu) = hot water. 水道水 (suidousui) = tap water; ミネラルウォーター (mineraru uootaa) = mineral water."},
+    {"q":"お茶 (ocha) is something offered to almost every guest in Japan. What is it?","type":"mc","options":["Rice wine","Tea","Soup","Coffee"],"answer":1,"explanation":"お茶 (おちゃ, ocha) = tea. The お- is an honorific prefix. In Japan, 'ocha' typically means green tea (緑茶, ryokucha) by default. Offering tea to guests is a deeply ingrained cultural practice. 'お茶を一杯どうぞ' = 'Please have a cup of tea.' Types include: 煎茶 (sencha), 抹茶 (matcha = powdered green tea), 麦茶 (mugicha = barley tea, popular cold in summer)."},
+    {"q":"What does 魚 (sakana) mean?","type":"mc","options":["Meat","Vegetable","Fish","Egg"],"answer":2,"explanation":"魚 (さかな, sakana) = fish. Fish is central to Japanese cuisine — sushi (寿司), sashimi (刺身), grilled fish (焼き魚, yakizakana). '魚が好きです' = 'I like fish.' The kanji 魚 is a pictograph of a fish. The kun-yomi is 'sakana' (everyday speech); on-yomi is 'gyo' in compounds like 金魚 (kingyo = goldfish). '魚屋' (sakanaya) = fish shop."},
+    {"q":"In Japanese cuisine, 肉 (niku) refers to what ingredient?","type":"mc","options":["Fish","Tofu","Meat","Rice"],"answer":2,"explanation":"肉 (にく, niku) = meat. 牛肉 (gyuuniku) = beef, 豚肉 (butaniku) = pork, 鶏肉 (toriniku) = chicken. '肉が好きですか' = 'Do you like meat?' The kanji 肉 (the 月 radical in compounds, called 'nikuzuki') represents flesh and appears in many body-related kanji. Gyuudon (牛丼) and yakiniku (焼肉, grilled meat) are famous dishes featuring niku."},
+    {"q":"A Japanese person asks you '今、何時ですか?' What is the correct interpretation?","type":"mc","options":["What day is it?","What time is it?","What month is it?","What year is it?"],"answer":1,"explanation":"何時ですか (なんじですか, nan ji desu ka) = 'What time is it?' 何 (nan) = what, 時 (ji) = o'clock/hour. To answer: '三時です' (sanji desu = It is 3 o'clock). Half hours use 半 (han): '三時半' (sanji han = 3:30). AM/PM: 午前 (gozen = AM) and 午後 (gogo = PM). Learning to tell time is an essential N5 skill."},
+    {"q":"You are lost and need to ask for directions. Which question word means 'where'?","type":"mc","options":["いつ (itsu)","だれ (dare)","なに (nani)","どこ (doko)"],"answer":3,"explanation":"どこ (doko) = where. 'トイレはどこですか' = 'Where is the restroom?' 'どこから来ましたか' = 'Where are you from?' The core question words: どこ (where), いつ (when), だれ (who), なに/なん (what), どれ (which), どう (how), なぜ/どうして (why). Mastering these is key to forming basic Japanese questions."},
+    {"q":"Which question word asks about TIME — 'When?'","type":"mc","options":["どこ (doko)","だれ (dare)","いつ (itsu)","どれ (dore)"],"answer":2,"explanation":"いつ (itsu) = when. 'パーティーはいつですか' = 'When is the party?' 'いつ日本へ行きますか' = 'When will you go to Japan?' Unlike English 'when,' いつ can stand alone as a full question: 'いつ?' = 'When?' It also combines: いつも (itsumo = always), いつか (itsuka = someday). '試験はいつですか' = 'When is the exam?'"},
+    {"q":"You want to know who left this bag behind. What question word do you use?","type":"mc","options":["どこ (doko)","いつ (itsu)","どうして (doushite)","だれ (dare)"],"answer":3,"explanation":"だれ (dare) = who. 'これはだれのかばんですか' = 'Whose bag is this?' 'だれが来ましたか' = 'Who came?' In more formal/polite contexts, どなた (donata) is the respectful equivalent of dare. 'あの人はだれですか' = 'Who is that person?' Note: dare + の (possessive particle) = 'whose' — 'だれの?' is a very common question pattern."},
+    {"q":"Which adjective means 'small' in Japanese?","type":"mc","options":["大きい (ookii)","長い (nagai)","小さい (chiisai)","安い (yasui)"],"answer":2,"explanation":"小さい (ちいさい, chiisai) = small / little. '小さい犬ですね' = 'What a small dog!' It is the opposite of 大きい (ookii = big). The kanji 小 depicts three small strokes — a pictograph of something tiny. Compounds using 小: 小学校 (shougakkou = elementary school), 小説 (shousetsu = novel), 小鳥 (kotori = small bird). The adverb form: 小さく (chiisaku = in a small way)."},
+    {"q":"How do you say 'long' as an adjective in Japanese (as in a long road)?","type":"mc","options":["短い (mijikai)","高い (takai)","広い (hiroi)","長い (nagai)"],"answer":3,"explanation":"長い (ながい, nagai) = long (in size/length). '長い道ですね' = 'It's a long road.' Opposite: 短い (mijikai = short). The kanji 長 depicts long flowing hair — a pictograph of an elder with long hair. Compounds: 長所 (chousho = strong point), 社長 (shachou = company president), 長男 (chounan = eldest son). Also used for time: '長い時間' (nagai jikan = a long time)."},
+    {"q":"You find a great deal at a market. Which adjective describes something 'cheap' or 'inexpensive'?","type":"mc","options":["高い (takai)","安い (yasui)","重い (omoi)","難しい (muzukashii)"],"answer":1,"explanation":"安い (やすい, yasui) = cheap / inexpensive. 'このりんごは安いですね' = 'These apples are cheap!' Opposite: 高い (takai = expensive / high). Note: 高い means BOTH 'expensive' and 'tall/high' — context determines which. 安い comes from 安 (an) meaning 'peace/safe/cheap.' Compounds: 安心 (anshin = peace of mind), 安全 (anzen = safety). To ask for a lower price: '安くしてください' = 'Please make it cheaper.'"},
+    {"q":"You don't understand what someone said. Which phrase do you use?","type":"mc","options":["知りません (shirimasen)","できません (dekimasen)","わかりません (wakarimasen)","見えません (miemasen)"],"answer":2,"explanation":"わかりません (wakarimasen) = 'I don't understand / I don't know.' From わかる (wakaru = to understand). '日本語がわかりません' = 'I don't understand Japanese.' Contrast with 知りません (shirimasen = I don't know [a fact/person]), which implies lack of knowledge rather than comprehension. 'もう一度言ってください' (mou ichido itte kudasai = Please say it one more time) pairs naturally with wakarimasen."},
+    {"q":"When leaving home in Japan, one person says '行ってきます' (Ittekimasu). What does this express, and what is the expected response?","type":"mc","options":["'I'm home!' — response: 'Welcome back!'","'I'm leaving, I'll be back' — response: '行ってらっしゃい (Itterasshai)'","'Good morning' — response: 'Good morning'","'Thank you for the meal' — response: 'Please enjoy'"],"answer":1,"explanation":"'行ってきます' (ittekimasu) literally means 'I will go and come back.' It's said when leaving home, implying you'll return. The response from those staying home is '行ってらっしゃい' (itterasshai) = 'Go and come back safely / Have a good trip.' This exchange is a fundamental daily ritual in Japanese family life — deeply embedded in the culture of acknowledging departures and returns."},
+    {"q":"Someone returns home and calls out 'ただいま!' (Tadaima). What is the correct response from those inside?","type":"mc","options":["行ってらっしゃい (Itterasshai)","おやすみなさい (Oyasumi nasai)","おかえりなさい (Okaerinasai)","いただきます (Itadakimasu)"],"answer":2,"explanation":"'ただいま' (tadaima) = 'I'm home!' (literally 'just now'). The proper response is 'おかえりなさい' (okaerinasai) = 'Welcome back!' (from 帰る kaeru = to return). This homecoming ritual mirrors the departure ritual (行ってきます/行ってらっしゃい). These four expressions — ittekimasu, itterasshai, tadaima, okaerinasai — form two matched pairs that are essential to Japanese daily life. Omitting them can seem cold or rude."}
   ],
   "japanese_n4": [
     {"q":"What does 'Kaizen' (改善) mean?","type":"mc","options":["Innovation breakthrough","Continuous improvement","Team harmony","Respect hierarchy"],"answer":1,"explanation":"'Kaizen' (改善) = continuous improvement. 改 (kai) = change, 善 (zen) = good. Toyota's production system made it globally famous. It emphasizes small, incremental improvements by all workers rather than top-down innovation — a core principle of lean manufacturing."},
@@ -493,9 +557,9 @@ hr{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
     {"q":"What does 'Gambatte' (頑張って) express?","type":"mc","options":["Congratulations on your achievement","Good luck / Do your best / Hang in there","Thank you for everything","Take care on your way home"],"answer":1,"explanation":"'Gambatte' (がんばって) or 'ganbatte kudasai' = do your best / hang in there / good luck — encouragement before or during a challenge. 'Ganbarimasu' (I will do my best) is the response when receiving a challenge. Deeply embedded in Japanese culture — effort (gaman = perseverance) is highly valued. Used before exams, sports, difficult projects."},
     {"q":"What does 'Daijoubu' (大丈夫) mean?","type":"mc","options":["I'm sorry / please forgive me","It's fine / It's okay / Are you alright?","I don't understand","Please wait a moment"],"answer":1,"explanation":"'Daijoubu' (大丈夫) = it's fine, okay, alright. Used to reassure: 'daijoubu desu ka?' = are you okay? / is that alright? 'Daijoubu desu' = I'm fine / it's okay. Also used to politely decline: offered a refill, respond 'daijoubu desu' to mean 'no thank you, I'm okay.' One of the most versatile phrases in everyday Japanese."},
     {"q":"What does 'Sugoi' (すごい) mean?","type":"mc","options":["How boring / how ordinary","Amazing / incredible / wow","I'm hungry / exhausted","That's embarrassing"],"answer":1,"explanation":"'Sugoi' (すごい) = amazing, incredible, or wow — a versatile exclamation of surprise or admiration. 'Sugoi ne!' = Isn't that amazing! Like many Japanese adjectives, it can intensify: 'meccha sugoi' (super amazing, Kansai slang) or 'cho sugoi' (so amazing). One of the most frequently heard words in conversational Japanese."},
-    {"q":"What does the Japanese particle 'wa' (は) indicate?","type":"mc","options":["The object of the sentence","The location where an action occurs","The topic of the sentence","The direction of movement"],"answer":2,"explanation":"'Wa' (は) is the topic marker — it marks what the sentence is ABOUT. 'Watashi wa gakusei desu' = As for me, I am a student. Different from the subject marker 'ga' (が): 'ga' introduces new information or emphasizes the subject; 'wa' handles known or contrasted topics. The wa/ga distinction is one of Japanese grammar's most nuanced aspects."},
-    {"q":"What does the Japanese particle 'o' / 'wo' (を) indicate?","type":"mc","options":["The topic","The direction","The time","The direct object of a verb"],"answer":3,"explanation":"'O' (を, also written 'wo') marks the direct object — the thing receiving the action. 'Sushi o taberu' = eat sushi; 'Nihongo o hanasu' = speak Japanese; 'hon o yomu' = read a book. In modern Japanese, を is only used as the object marker; it's pronounced 'o' in standard Tokyo Japanese, not 'wo.'"},
-    {"q":"What does 'desu' (です) and 'masu' (ます) signal in Japanese?","type":"mc","options":["Past tense for all verbs","Negative sentences","Polite/formal register — added to make speech or writing more respectful","Indicating future actions only"],"answer":2,"explanation":"'Desu' ends noun and adjective sentences politely (in place of the plain copula 'da'); 'masu' ends verb sentences politely. Dropping them to the plain form (da/dictionary form) is casual. This desu/masu style is called 'teineigo' — the baseline polite form taught first to all Japanese learners and used in business, with strangers, and in formal contexts."},
+    {"q":"What does 'yoyaku' (予約) mean?","type":"mc","options":["Cancellation","An urgent request","Reservation / booking","A formal introduction"],"answer":2,"explanation":"'Yoyaku' (予約) = reservation or booking. 予 (yo) = in advance, 約 (yaku) = promise/appointment. Essential for restaurants, hotels, clinics, and hair salons in Japan. 'Yoyaku shitai no desu ga...' = I'd like to make a reservation. 'Yoyaku nashi de daijoubu desu ka?' = Is it okay without a reservation?"},
+    {"q":"What does 'kimochi' (気持ち) mean?","type":"mc","options":["Physical strength","Important task","Direction or orientation","Feeling / mood / sensation"],"answer":3,"explanation":"'Kimochi' (気持ち) = feeling, mood, or physical sensation. 気 (ki) = spirit/energy, 持ち (mochi) = having/holding. 'Kimochi ii' = feels good. 'Kimochi warui' = feels bad/unpleasant. Used for both emotional and physical states — 'atama ga kimochi warui' = my head feels bad (nauseous). One of the most expressive and versatile words in everyday Japanese."},
+    {"q":"What does 'renraku suru' (連絡する) mean?","type":"mc","options":["To prepare a document","To contact / get in touch","To report to a supervisor","To apologize formally"],"answer":1,"explanation":"'Renraku suru' (連絡する) = to contact or communicate. 連絡 (renraku) = contact/communication. A pillar of Japanese workplace culture: the famous Ho-Ren-So (ホウレンソウ) framework covers 報告 (houkoku, reporting), 連絡 (renraku, sharing updates), and 相談 (soudan, consulting). 'Renraku shimasu' = I'll be in touch. Failing to renraku in a Japanese office is a serious breach of etiquette."},
     {"q":"What does 'yasashii' (優しい) mean?","type":"mc","options":["Strong","Difficult","Kind / Gentle (also: easy)","Busy"],"answer":2,"explanation":"'Yasashii' (優しい) = kind, gentle, tender. A different kanji gives 'yasashii' (易しい) = easy — same pronunciation, different meaning and character. Context determines which is meant. 'Yasashii hito' = a kind person. The ease/kindness homophone is a classic Japanese language puzzle: Japanese is rich in homophones disambiguated by kanji."},
     {"q":"What does 'ii' / 'yoi' (良い / いい) mean?","type":"mc","options":["Bad","Old","New","Good"],"answer":3,"explanation":"'Ii' (いい) or 'yoi' (良い) = good. 'Ii' is the spoken/casual form; 'yoi' the written/formal root. Negatives: 'yoku nai' (not good). Comparative: 'motto ii' (better). 'Ii ne!' (いいね) = That's good! / I like that! — the same phrase Facebook used for the 'Like' button (いいね! in Japanese interface). One of the most frequent Japanese words."},
     {"q":"What does 'warui' (悪い) mean?","type":"mc","options":["Good","Fast","Small","Bad"],"answer":3,"explanation":"'Warui' (悪い) = bad, wrong, or sorry (when taking responsibility). 'Warui ne' can casually mean 'sorry about that.' The kanji 悪 (aku/waru) = evil/bad — appears in 悪人 (akunin, villain), 悪口 (waruguchi, bad-mouthing), and 最悪 (saiaku, the worst). Antonym: 'ii/yoi' (good)."},
@@ -503,13 +567,68 @@ hr{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
     {"q":"What does 'kachō' (課長) mean in a Japanese company?","type":"mc","options":["Department head","Company president","General staff member","Section chief / manager"],"answer":3,"explanation":"Kachō (課長) = section chief or manager — the layer below buchō (department head) and above team leaders. Japanese corporate hierarchy: shachō (CEO/president) → buchō (dept. head) → kachō (section chief) → kakaricho (team leader) → hiraain (general staff). Addressing someone by their title (e.g., 'Yamada-kachō') is standard and respectful in Japanese workplaces."},
     {"q":"What does the Japanese particle 'ni' (に) indicate?","type":"mc","options":["The topic of the sentence","The direct object of a verb","Location/existence, direction of movement, point in time, or indirect object","Contrast between two items"],"answer":2,"explanation":"'Ni' (に) is a multi-purpose particle: location of existence ('Tokyo ni imasu' = I'm in Tokyo), direction ('Osaka ni ikimasu' = going to Osaka), point in time ('goji ni' = at 5 o'clock), and indirect object ('tomodachi ni ageru' = give to a friend). Its versatility makes it one of the most important — and most complex — particles in Japanese grammar."},
     {"q":"What does 'suru' (する) mean?","type":"mc","options":["To eat","To go","To do / to make happen","To return home"],"answer":2,"explanation":"'Suru' (する) = to do — one of Japan's two irregular verbs (the other is 'kuru,' to come). It's the engine of countless compound verbs: benkyou suru (勉強する, to study), shigoto suru (仕事する, to work), denwa suru (電話する, to phone). Polite form: 'shimasu.' Because suru combines with nouns to make verbs, mastering it dramatically expands vocabulary."},
-    {"q":"What is the word for 'every day' in Japanese?","type":"mc","options":["Mainichi","毎月 (maisuki)","Maiasa","Maiban"],"answer":0,"explanation":"'Mainichi' (毎日) = every day. 毎 (mai) = every/each + 日 (nichi/hi) = day. Related: maiasa (毎朝, every morning), maiban (毎晩, every evening), maishuu (毎週, every week), maitsuki (毎月, every month), maitoshi/mainendo (毎年, every year). 'Mainichi nihongo o benkyou shimasu' = I study Japanese every day. Frequently used in scheduling and habits."},
+    {"q":"What is the word for 'every day' in Japanese?","type":"mc","options":["Mainichi","毎月 (maitsuki)","Maiasa","Maiban"],"answer":0,"explanation":"'Mainichi' (毎日) = every day. 毎 (mai) = every/each + 日 (nichi/hi) = day. Related: maiasa (毎朝, every morning), maiban (毎晩, every evening), maishuu (毎週, every week), maitsuki (毎月, every month), maitoshi/mainendo (毎年, every year). 'Mainichi nihongo o benkyou shimasu' = I study Japanese every day. Frequently used in scheduling and habits."},
     {"q":"What is the polite way to say 'please' when making a request in Japanese?","type":"mc","options":["Dozo","Onegaishimasu","Kudasai","Both Onegaishimasu and Kudasai are correct depending on context"],"answer":3,"explanation":"Both are correct: 'Kudasai' (ください) follows a verb in te-form ('tabete kudasai' = please eat) or a noun ('mizu o kudasai' = please give me water). 'Onegaishimasu' (おねがいします) makes a broader request or is used more formally ('Yoroshiku onegaishimasu'). 'Dozo' (どうぞ) means 'please, go ahead' — when offering something. Context determines which fits."},
     {"q":"What does 'Ikura desu ka?' (いくらですか？) mean?","type":"mc","options":["Where is it?","How do I get there?","How much does it cost?","What time is it?"],"answer":2,"explanation":"'Ikura desu ka?' literally means 'How much is it?' — one of the most useful shopping phrases. 'Ikura' (いくら) = how much (price). Related: 'Ikutsu desu ka?' (how many?), 'Ikura arimasu ka?' (how much do you have?). In shops, pointing and saying 'Kore wa ikura desu ka?' (How much is this?) always works."},
     {"q":"What does 'Hai, wakarimashita' (はい、わかりました) mean?","type":"mc","options":["Yes, I disagree","Yes, I understand / I understood","Yes, I will try","Yes, please continue"],"answer":1,"explanation":"'Wakarimashita' (わかりました) = 'I understood' (past tense of wakaru, to understand). The full phrase means 'Yes, I understood.' Used to confirm comprehension of instructions. In business, this is critical — saying 'wakarimashita' without understanding can cause problems. If unsure, use 'Mou ichido itte kudasai' (もう一度言ってください — please say it again)."},
-    {"q":"What does 'Gochisousama deshita' (ごちそうさまでした) express?","type":"mc","options":["Please bring the check","This food is too spicy","Thank you for the meal — said after eating","I would like to order more food"],"answer":2,"explanation":"'Gochisousama deshita' (ごちそうさまでした) is said after finishing a meal — thanking the host, cook, and everyone involved in providing the food. It pairs with 'Itadakimasu' said before eating. 'Gochisou' literally means 'a feast' — implying the effort involved in preparing food. This ritual acknowledgment of meals reflects deep Japanese gratitude for food and those who prepare it."}
-  ],
-  "japanese_n3": [
+    {"q":"What does 'Gochisousama deshita' (ごちそうさまでした) express?","type":"mc","options":["Please bring the check","This food is too spicy","Thank you for the meal — said after eating","I would like to order more food"],"answer":2,"explanation":"'Gochisousama deshita' (ごちそうさまでした) is said after finishing a meal — thanking the host, cook, and everyone involved in providing the food. It pairs with 'Itadakimasu' said before eating. 'Gochisou' literally means 'a feast' — implying the effort involved in preparing food. This ritual acknowledgment of meals reflects deep Japanese gratitude for food and those who prepare it."},
+    {"q":"What does 病気 (byouki) mean?","type":"mc","options":["Tired","Sick / illness","Medicine","Hospital"],"answer":1,"explanation":"病気 (byouki) means illness or being sick. 病 means disease and 気 here refers to condition or spirit. Example: 彼は病気です (kare wa byouki desu) — He is sick. Related: 病院 (byouin) = hospital, 薬 (kusuri) = medicine."},
+    {"q":"Which word means 'medicine' in Japanese?","type":"mc","options":["熱 (netsu)","病院 (byouin)","薬 (kusuri)","切符 (kippu)"],"answer":2,"explanation":"薬 (kusuri) means medicine or drug. Example: 薬を飲む (kusuri wo nomu) — to take medicine. Related words: 病気 (byouki) = illness, 病院 (byouin) = hospital. In Japanese pharmacies (薬局, yakkyoku), you can purchase over-the-counter medications."},
+    {"q":"What does 病院 (byouin) mean?","type":"mc","options":["Pharmacy","Clinic waiting room","Hospital","Doctor"],"answer":2,"explanation":"病院 (byouin) means hospital. 病 (byou) means disease and 院 (in) means institution or hall. Example: 病院に行く (byouin ni iku) — to go to the hospital. Note: 医者 (isha) = doctor, 看護師 (kangoshi) = nurse."},
+    {"q":"熱 (netsu) has two common meanings. Which pair is correct?","type":"mc","options":["Cold / ice","Fever / heat","Pain / ache","Tired / exhausted"],"answer":1,"explanation":"熱 (netsu) means fever or heat. Example: 熱がある (netsu ga aru) — to have a fever. 熱い (atsui) = hot (to the touch). This differs from 暑い (atsui) = hot weather and 辛い (karai) = spicy hot. Checking for fever with a thermometer is 体温計 (taionkei)."},
+    {"q":"「頭が痛い」(atama ga itai) means:","type":"mc","options":["My stomach hurts","I have a headache","I feel dizzy","I'm tired"],"answer":1,"explanation":"頭が痛い (atama ga itai) literally means 'my head hurts' — a headache. 頭 (atama) = head, 痛い (itai) = painful. Other body pain expressions: お腹が痛い (onaka ga itai) = stomachache, 歯が痛い (ha ga itai) = toothache, 背中が痛い (senaka ga itai) = backache."},
+    {"q":"疲れた (tsukareta) expresses:","type":"mc","options":["I am hungry","I am sleepy","I am tired","I am bored"],"answer":2,"explanation":"疲れた (tsukareta) is the past tense of 疲れる (tsukareru) meaning to get tired. As a statement, 疲れた means 'I'm tired.' Example: 今日は疲れた (kyou wa tsukareta) — I'm tired today. The polite workplace expression お疲れ様でした (otsukaresama deshita) comes from this same root."},
+    {"q":"Which adjective means 'happy' or 'glad'?","type":"mc","options":["悲しい (kanashii)","寂しい (samishii)","うれしい (ureshii)","怖い (kowai)"],"answer":2,"explanation":"うれしい (ureshii) means happy, glad, or delighted. It describes a feeling of joy in response to something. Example: プレゼントをもらってうれしい (purezento wo moratte ureshii) — I'm happy to receive a gift. Note: 楽しい (tanoshii) = fun/enjoyable (more about an activity), while うれしい focuses on the emotion."},
+    {"q":"悲しい (kanashii) means:","type":"mc","options":["Scary","Lonely","Happy","Sad"],"answer":3,"explanation":"悲しい (kanashii) means sad or sorrowful. Example: 悲しいニュース (kanashii nyuusu) — sad news. 悲 is the kanji for grief/sorrow. Related emotional adjectives: うれしい (ureshii) = happy, 寂しい (samishii) = lonely, 怖い (kowai) = scary."},
+    {"q":"What does 怖い (kowai) mean?","type":"mc","options":["Difficult","Scary / frightened","Painful","Embarrassing"],"answer":1,"explanation":"怖い (kowai) means scary or frightening, and also describes the feeling of being afraid. Example: 怖い映画 (kowai eiga) — a scary movie. 幽霊が怖い (yuurei ga kowai) — I'm scared of ghosts. Related: 恐ろしい (osoroshii) = terrifying (stronger nuance), 心配 (shinpai) = worried."},
+    {"q":"寂しい (samishii) / 寂しい (sabishii) means:","type":"mc","options":["Busy","Lonely","Boring","Jealous"],"answer":1,"explanation":"寂しい (samishii or sabishii — both pronunciations are correct) means lonely or lonesome. Example: 一人で寂しい (hitori de samishii) — lonely by myself. This is a common feeling described in Japanese songs and literature. Related: 孤独 (kodoku) = solitude/isolation (more formal)."},
+    {"q":"暇 (hima) refers to:","type":"mc","options":["Homework","Free time / not being busy","Emergency","Vacation abroad"],"answer":1,"explanation":"暇 (hima) means free time or not being busy. 暇がある (hima ga aru) = to have free time. Example: 今日は暇です (kyou wa hima desu) — I'm free today. Note that calling someone 暇人 (himajin) = 'person with free time' can sound like an insult (implying they have nothing important to do)."},
+    {"q":"大切 (taisetsu) means:","type":"mc","options":["Convenient","Important / precious","Difficult","Dangerous"],"answer":1,"explanation":"大切 (taisetsu) means important or precious. It carries an emotional weight of cherishing something or someone. Example: 家族は大切です (kazoku wa taisetsu desu) — Family is precious. Similar: 重要 (juuyou) = important (more formal/objective), 大事 (daiji) = important (casual synonym for 大切)."},
+    {"q":"Which word means 'convenient'?","type":"mc","options":["不便 (fuben)","大切 (taisetsu)","便利 (benri)","暇 (hima)"],"answer":2,"explanation":"便利 (benri) means convenient or handy. 便 means convenience and 利 means profit/benefit. Example: このアプリは便利です (kono apuri wa benri desu) — This app is convenient. The opposite is 不便 (fuben) = inconvenient. Japan is famous for 便利な (benri na) konbini (convenience stores)."},
+    {"q":"不便 (fuben) means the opposite of convenient. What is it?","type":"mc","options":["Very convenient","Somewhat convenient","Inconvenient","Unnecessary"],"answer":2,"explanation":"不便 (fuben) means inconvenient. 不 (fu) is a negative prefix meaning 'not' or 'un-'. Example: この場所は不便です (kono basho wa fuben desu) — This place is inconvenient. Other 不 words: 不安 (fuan) = uneasy, 不満 (fuman) = dissatisfied, 不可能 (fukanou) = impossible."},
+    {"q":"急ぐ (isogu) means:","type":"mc","options":["To rest","To hurry","To decide","To continue"],"answer":1,"explanation":"急ぐ (isogu) means to hurry or to rush. Example: 急いで！(isoide!) — Hurry up! This is a Group 1 (godan) verb. 急 also appears in 急行 (kyuukou) = express train, 緊急 (kinkyuu) = emergency, 急に (kyuu ni) = suddenly."},
+    {"q":"決める (kimeru) means:","type":"mc","options":["To find","To compare","To decide","To collect"],"answer":2,"explanation":"決める (kimeru) means to decide or to determine. It is a Group 2 (ichidan) verb. Example: 何を食べるか決める (nani wo taberu ka kimeru) — to decide what to eat. The intransitive form is 決まる (kimaru) = to be decided. Related: 決定 (kettei) = decision (noun)."},
+    {"q":"伝える (tsutaeru) means:","type":"mc","options":["To receive","To convey / tell","To investigate","To continue"],"answer":1,"explanation":"伝える (tsutaeru) means to convey, tell, or communicate a message to someone. Example: 彼に伝えてください (kare ni tsutaete kudasai) — Please tell him. Related: 伝言 (dengon) = message, 言い伝え (iitsutae) = legend/oral tradition. Often used in business: 「よろしくお伝えください」= Please give them my regards."},
+    {"q":"続ける (tsuzukeru) means:","type":"mc","options":["To start","To stop","To continue","To hurry"],"answer":2,"explanation":"続ける (tsuzukeru) means to continue or keep doing something. Example: 勉強を続ける (benkyou wo tsuzukeru) — to continue studying. The intransitive form is 続く (tsuzuku) = to continue (on its own). 続 appears in: 連続 (renzoku) = consecutive, 持続 (jizoku) = sustaining."},
+    {"q":"集める (atsumeru) means:","type":"mc","options":["To send","To find","To help","To collect / gather"],"answer":3,"explanation":"集める (atsumeru) means to collect, gather, or assemble things. Example: 切手を集める (kitte wo atsumeru) — to collect stamps. The intransitive form is 集まる (atsumaru) = to gather (people gather). 集合 (shuugou) = assembly/meeting point."},
+    {"q":"手伝う (tetsudau) means:","type":"mc","options":["To investigate","To help / assist","To meet","To compare"],"answer":1,"explanation":"手伝う (tetsudau) means to help or assist someone. Example: 引っ越しを手伝う (hikkoshi wo tetsudau) — to help with moving. 手伝い (tetsudai) as a noun means help or assistant. Note: 手 (te) = hand, 伝 (tsutau) = to transmit — originally 'to lend a hand.'"},
+    {"q":"調べる (shiraberu) means:","type":"mc","options":["To compare","To decide","To investigate / look up","To continue"],"answer":2,"explanation":"調べる (shiraberu) means to investigate, check, or look something up. Example: 辞書で調べる (jisho de shiraberu) — to look it up in a dictionary. インターネットで調べる (intaanetto de shiraberu) — to look it up online. Related: 調査 (chousa) = investigation/survey."},
+    {"q":"見つける (mitsukeru) means:","type":"mc","options":["To look at","To find","To see","To watch"],"answer":1,"explanation":"見つける (mitsukeru) means to find or discover something. Example: 鍵を見つけた (kagi wo mitsuketa) — I found the key. The intransitive form is 見つかる (mitsukaru) = to be found. 見 (mi) relates to seeing/finding, and 付ける (tsukeru) means to attach — so 'to attach one's gaze on.'"},
+    {"q":"比べる (kuraberu) means:","type":"mc","options":["To receive","To compare","To send","To meet"],"answer":1,"explanation":"比べる (kuraberu) means to compare. Example: 値段を比べる (nedan wo kuraberu) — to compare prices. 比べて (kurabete) = compared to. Example: 去年と比べて (kyonen to kurabete) — compared to last year. Related: 比較 (hikaku) = comparison (more formal/written form)."},
+    {"q":"会う (au) in the context of people means:","type":"mc","options":["To call someone","To meet someone","To know someone","To miss someone"],"answer":1,"explanation":"会う (au) means to meet or see someone. Example: 友達に会う (tomodachi ni au) — to meet a friend. Note the particle に (ni) is used with 会う. 会う is a Group 1 verb. Related: 会議 (kaigi) = meeting, 再会 (saikai) = reunion. Different from 合う (au) = to match/fit."},
+    {"q":"送る (okuru) has two related meanings. Which pair is correct?","type":"mc","options":["To receive / to take","To send / to see someone off","To find / to meet","To collect / to compare"],"answer":1,"explanation":"送る (okuru) means both to send (a letter, package, email) and to see someone off or escort them. Example: メールを送る (meeru wo okuru) — to send an email. 駅まで送る (eki made okuru) — to see (someone) off to the station. Related: 送別会 (soubetsukai) = farewell party."},
+    {"q":"受ける (ukeru) in the context of exams means:","type":"mc","options":["To pass an exam","To fail an exam","To take / sit for an exam","To study for an exam"],"answer":2,"explanation":"受ける (ukeru) means to receive or to take/sit for something. In the exam context: 試験を受ける (shiken wo ukeru) — to take an exam. Also: 注文を受ける (chuumon wo ukeru) = to receive an order. Related: 受付 (uketsuke) = reception desk, 受験 (juken) = taking an entrance exam."},
+    {"q":"新幹線 (Shinkansen) is best described as:","type":"mc","options":["A local commuter train","The bullet train / high-speed rail","A subway line","An international express train"],"answer":1,"explanation":"新幹線 (Shinkansen) literally means 'new trunk line' — it is Japan's famous bullet train network. 新 (shin) = new, 幹線 (kansen) = trunk/main line. Launched in 1964 for the Tokyo Olympics, it connects major cities at speeds over 300 km/h. Types include のぞみ (Nozomi), ひかり (Hikari), and こだま (Kodama)."},
+    {"q":"地下鉄 (chikatetsu) means:","type":"mc","options":["Bullet train","Elevated railway","Subway / underground train","Monorail"],"answer":2,"explanation":"地下鉄 (chikatetsu) means subway or underground train. 地下 (chika) = underground, 鉄 (tetsu) = iron/railway. Tokyo's subway system is one of the world's most extensive. Compare: 電車 (densha) = train (general), 新幹線 (Shinkansen) = bullet train, 路面電車 (romen densha) = tram."},
+    {"q":"飛行機 (hikouki) means:","type":"mc","options":["Helicopter","Airplane","Spaceship","Bullet train"],"answer":1,"explanation":"飛行機 (hikouki) means airplane. 飛行 (hikou) = flight (飛 = fly, 行 = go) and 機 (ki) = machine. Example: 飛行機で旅行する (hikouki de ryokou suru) — to travel by airplane. Related: 空港 (kuukou) = airport, 搭乗 (toujou) = boarding, パイロット (pairotto) = pilot."},
+    {"q":"切符 (kippu) means:","type":"mc","options":["Timetable","Platform","Ticket","Station"],"answer":2,"explanation":"切符 (kippu) means ticket, particularly for trains and other transport. Example: 切符を買う (kippu wo kau) — to buy a ticket. 片道切符 (katamichi kippu) = one-way ticket, 往復切符 (oufuku kippu) = round-trip ticket. In modern Japan, IC cards like Suica have largely replaced paper 切符 for daily commuting."},
+    {"q":"予定 (yotei) means:","type":"mc","options":["Reservation","Schedule / plan","Meeting","Preparation"],"answer":1,"explanation":"予定 (yotei) means schedule, plan, or something that is planned/scheduled. Example: 今週の予定 (konshuu no yotei) — this week's schedule. 予定がある (yotei ga aru) = to have plans. Related: 予約 (yoyaku) = reservation, 計画 (keikaku) = plan/project, 予想 (yosou) = prediction."},
+    {"q":"Which word means 'last week'?","type":"mc","options":["来週 (raishuu)","今週 (konshuu)","先週 (senshuu)","再来週 (saraishuu)"],"answer":2,"explanation":"先週 (senshuu) means last week. 先 (sen) means previous/before. The pattern: 先週 (senshuu) = last week, 今週 (konshuu) = this week, 来週 (raishuu) = next week, 再来週 (saraishuu) = the week after next. The same pattern applies to months: 先月, 今月, 来月."},
+    {"q":"来週 (raishuu) means:","type":"mc","options":["Last week","This week","Next week","Every week"],"answer":2,"explanation":"来週 (raishuu) means next week. 来 (rai) means coming/next. Example: 来週の月曜日 (raishuu no getsuyoubi) — next Monday. Time word pattern: 先週 = last week, 今週 = this week, 来週 = next week. The same 来 prefix works for: 来月 (raigetsu) = next month, 来年 (rainen) = next year."},
+    {"q":"今年 (kotoshi) means:","type":"mc","options":["Last year","Next year","Every year","This year"],"answer":3,"explanation":"今年 (kotoshi) means this year. 今 (ima/ko) = now/current, 年 (toshi/nen) = year. Note the irregular reading — it's 'kotoshi' not 'imatoshi.' Example: 今年の目標 (kotoshi no mokuhyou) — this year's goal. Year pattern: 去年 (kyonen) = last year, 今年 (kotoshi) = this year, 来年 (rainen) = next year."},
+    {"q":"去年 (kyonen) means:","type":"mc","options":["This year","Next year","Last year","Two years ago"],"answer":2,"explanation":"去年 (kyonen) means last year. 去 (kyo) = to go/past. Example: 去年の夏 (kyonen no natsu) — last summer. Note: an alternative form 昨年 (sakunen) is more formal. Year timeline: 一昨年 (ototoshi) = year before last, 去年 (kyonen) = last year, 今年 (kotoshi) = this year, 来年 (rainen) = next year."},
+    {"q":"会議 (kaigi) in a Japanese office context means:","type":"mc","options":["Business trip","Overtime","Meeting","Day off"],"answer":2,"explanation":"会議 (kaigi) means a meeting or conference. 会 (kai) = gathering, 議 (gi) = discussion. Example: 午後に会議があります (gogo ni kaigi ga arimasu) — There's a meeting in the afternoon. Related: 会議室 (kaigishitsu) = meeting room, 議題 (gidai) = agenda, 打ち合わせ (uchiawase) = informal meeting/briefing."},
+    {"q":"出張 (shucchou) means:","type":"mc","options":["Overtime work","Business trip","Annual leave","Company outing"],"answer":1,"explanation":"出張 (shucchou) means a business trip. 出 (shutsu) = go out, 張 (chou) = to stretch/extend. Example: 来週、大阪に出張します (raishuu, Osaka ni shucchou shimasu) — I'm going on a business trip to Osaka next week. Related: 国内出張 (kokunai shucchou) = domestic business trip, 海外出張 (kaigai shucchou) = overseas business trip."},
+    {"q":"残業 (zangyou) refers to:","type":"mc","options":["A company holiday","Overtime work","A business trip","A lunch break"],"answer":1,"explanation":"残業 (zangyou) means overtime work — working beyond regular hours. 残 (zan) = remaining, 業 (gyou) = work/business. Example: 今日も残業です (kyou mo zangyou desu) — I have overtime again today. Japan's overtime culture is well-known; 過労死 (karoushi) = death from overwork is a serious social issue. Related: 残業代 (zangyoudai) = overtime pay."},
+    {"q":"休日 (kyuujitsu) means:","type":"mc","options":["Morning shift","Sick leave","Day off / holiday","Lunch break"],"answer":2,"explanation":"休日 (kyuujitsu) means a day off or holiday. 休 (kyuu) = rest, 日 (jitsu/hi) = day. Example: 休日は何をしますか (kyuujitsu wa nani wo shimasu ka) — What do you do on your days off? Related: 祝日 (shukujitsu) = national holiday, 有給休暇 (yuukyuu kyuuka) = paid leave, 週末 (shuumatsu) = weekend."},
+    {"q":"準備 (junbi) means:","type":"mc","options":["Explanation","Preparation","Schedule","Direction"],"answer":1,"explanation":"準備 (junbi) means preparation or getting ready. Example: 準備ができた (junbi ga dekita) — I'm ready / preparations are complete. 準備する (junbi suru) = to prepare. Related: 準備物 (junbibutsu) = things needed/materials, 事前準備 (jizen junbi) = advance preparation. Often heard before presentations or events."},
+    {"q":"説明 (setsumei) means:","type":"mc","options":["Meaning","Reason","Explanation","Direction"],"answer":2,"explanation":"説明 (setsumei) means explanation or description. 説 (setsu) = explain/theory, 明 (mei) = clear/bright. Example: 説明してください (setsumei shite kudasai) — Please explain. 説明書 (setsumei-sho) = instruction manual/manual. Related: 解説 (kaisetsu) = commentary/explanation (more detailed), 説明会 (setsumei-kai) = information session."},
+    {"q":"意味 (imi) means:","type":"mc","options":["Reason","Explanation","Place","Meaning"],"answer":3,"explanation":"意味 (imi) means meaning or significance. Example: この言葉はどんな意味ですか (kono kotoba wa donna imi desu ka) — What does this word mean? 意味がある (imi ga aru) = meaningful, 意味がない (imi ga nai) = meaningless. At the JLPT, knowing 意味 is essential for questions about word definitions."},
+    {"q":"場所 (basho) means:","type":"mc","options":["Time","Reason","Place / location","Direction"],"answer":2,"explanation":"場所 (basho) means place or location. 場 (ba) = place/field, 所 (sho) = place. Example: 待ち合わせの場所 (machiawase no basho) — meeting place. In sumo, 場所 (basho) also refers to a tournament. Related: 住所 (juusho) = address, 近所 (kinjo) = neighborhood, 名所 (meisho) = famous place."},
+    {"q":"理由 (riyuu) means:","type":"mc","options":["Meaning","Place","Schedule","Reason"],"answer":3,"explanation":"理由 (riyuu) means reason or cause. 理 (ri) = reason/logic, 由 (yuu) = origin/reason. Example: 理由を教えてください (riyuu wo oshiete kudasai) — Please tell me the reason. Related: 原因 (genin) = cause (of a problem), 目的 (mokuteki) = purpose, わけ (wake) = reason (colloquial)."},
+    {"q":"食堂 (shokudou) refers to:","type":"mc","options":["Supermarket","Restaurant district","Cafeteria / dining hall","Kitchen"],"answer":2,"explanation":"食堂 (shokudou) means cafeteria or dining hall, often found in offices, schools, and hospitals serving affordable meals. 食 (shoku) = food/eat, 堂 (dou) = hall. Example: 会社の食堂で昼ごはんを食べる (kaisha no shokudou de hirugohan wo taberu) — to eat lunch at the company cafeteria. Also used for small informal restaurants."},
+    {"q":"郵便局 (yuubinkyoku) means:","type":"mc","options":["Bank","Post office","City hall","Police station"],"answer":1,"explanation":"郵便局 (yuubinkyoku) means post office. 郵便 (yuubin) = mail/post, 局 (kyoku) = bureau/office. Example: 郵便局で切手を買う (yuubinkyoku de kitte wo kau) — to buy stamps at the post office. Japan Post (日本郵便, Nihon Yuubin) also offers banking and insurance services. Related: 郵便番号 (yuubin bangou) = postal code."},
+    {"q":"銀行 (ginkou) means:","type":"mc","options":["Post office","Department store","Bank","Library"],"answer":2,"explanation":"銀行 (ginkou) means bank. 銀 (gin) = silver, 行 (kou) = go/row. Example: 銀行口座を開く (ginkou kouza wo hiraku) — to open a bank account. Major Japanese banks include 三菱UFJ銀行 and みずほ銀行. Related: 両替 (ryougae) = currency exchange, ATM (エーティーエム)."},
+    {"q":"What is おでん (oden)?","type":"mc","options":["Grilled rice balls","A type of sushi","Japanese hotpot with various ingredients in broth","Buckwheat noodles"],"answer":2,"explanation":"おでん (oden) is a popular Japanese hotpot dish featuring ingredients like daikon radish (大根), boiled eggs (ゆで卵), fish cake (はんぺん), and konjac (こんにゃく) simmered in a light dashi-soy broth. It's especially popular in winter and commonly sold at convenience stores and street stalls. A beloved comfort food in Japan."},
+    {"q":"焼き鳥 (yakitori) refers to:","type":"mc","options":["Fried chicken","Grilled chicken skewers","Chicken ramen","Chicken tempura"],"answer":1,"explanation":"焼き鳥 (yakitori) are grilled chicken skewers, a popular Japanese street food and izakaya (居酒屋) staple. 焼き (yaki) = grilled, 鳥 (tori) = bird/chicken. Common varieties include もも (thigh), むね (breast), ねぎま (chicken and green onion), and つくね (chicken meatball). Served with either 塩 (shio/salt) or たれ (tare/sweet soy sauce)."},
+    {"q":"Which grammar pattern means 'it is okay to' or 'you may'?","type":"mc","options":["~なければならない","~ほうがいい","~てもいい","~ことができる"],"answer":2,"explanation":"~てもいい (te mo ii) is used to express permission or that something is acceptable. Example: ここで写真を撮ってもいいですか (koko de shashin wo totte mo ii desu ka) — May I take photos here? To ask permission, use the question form. To deny permission: ~てはいけない (te wa ikenai) = must not. This is a key N4 grammar pattern."},
+    {"q":"「毎日運動しなければなりません」means:","type":"mc","options":["I want to exercise every day","I exercise every day","I must exercise every day","I don't need to exercise every day"],"answer":2,"explanation":"~なければならない (nakereba naranai) means 'must' or 'have to.' 毎日運動しなければなりません (mainichi undou shinakereba narimasen) = I must exercise every day. The casual form is ~なきゃ (nakya). Example: もう行かなきゃ (mou ikanakya) — I have to go now. This expresses obligation."},
+    {"q":"~ほうがいい (hou ga ii) is used to express:","type":"mc","options":["Ability to do something","An ongoing action","A recommendation / had better","Permission to do something"],"answer":2,"explanation":"~ほうがいい (hou ga ii) means 'it would be better to' or 'you had better.' Used to give advice. Example: 早く寝たほうがいい (hayaku neta hou ga ii) — You'd better go to bed early. Use past tense verb + ほうがいい for positive advice. Negative advice: ~ないほうがいい (nai hou ga ii) — it's better not to."},
+    {"q":"In the sentence 「音楽を聴きながら勉強します」, what does ~ながら (nagara) indicate?","type":"mc","options":["Doing something after another action","Doing two things simultaneously","Doing something in order to achieve a goal","A conditional situation"],"answer":1,"explanation":"~ながら (nagara) means 'while doing' — two actions happening at the same time, performed by the same subject. 音楽を聴きながら勉強します (ongaku wo kikinagara benkyou shimasu) = I study while listening to music. The main action comes after ながら. Note: the subject must be the same for both actions."},
+    {"q":"「日本語を勉強するために、日本に来ました」— what does ~ために (tame ni) express?","type":"mc","options":["A reason for a past event","A condition","In order to / for the purpose of","An ongoing action"],"answer":2,"explanation":"~ために (tame ni) expresses purpose: 'in order to' or 'for the sake of.' 日本語を勉強するために、日本に来ました (Nihongo wo benkyou suru tame ni, Nihon ni kimashita) = I came to Japan in order to study Japanese. Use dictionary form + ために for purpose. Related: ~のために (no tame ni) can also mean 'for the benefit of' someone."},
+    {"q":"「ピアノを弾くことができます」means:","type":"mc","options":["I want to play the piano","I used to play the piano","I am playing the piano","I can play the piano"],"answer":3,"explanation":"~ことができる (koto ga dekiru) means 'to be able to' or 'can.' ピアノを弾くことができます (piano wo hiku koto ga dekimasu) = I can play the piano. The potential form is another way to express ability (e.g., 弾ける = can play), but ことができる is more formal and commonly tested on JLPT N4."},
+    {"q":"In 「友達が手伝ってくれました」, what does ~てくれる (te kureru) indicate?","type":"mc","options":["I did something for my friend","My friend did something for me (from my perspective)","My friend asked me to do something","I received something from my friend"],"answer":1,"explanation":"~てくれる (te kureru) means someone does something for me (or for someone in my in-group), viewed as a favor. 友達が手伝ってくれました (tomodachi ga tetsudatte kuremashita) = My friend helped me (and I appreciate it). Compare: ~てあげる = I do something for someone else, ~てもらう = I receive the action/have someone do it for me."},
+  ], "japanese_n3": [
     {"q":"What is 'Nemawashi' (根回し) in a business context?","type":"mc","options":["A traditional harvest ceremony","Building consensus by consulting stakeholders before a formal meeting","A type of Japanese flower arrangement","An accounting audit process"],"answer":1,"explanation":"'Nemawashi' literally means 'going around the roots' (a gardening term). In business, it refers to the Japanese practice of informally gaining buy-in from key people before a formal proposal — so the meeting itself is a formality, not a debate. Essential to Japanese decision-making culture."},
     {"q":"What is 'ringi' (稟議) in Japanese business culture?","type":"mc","options":["A formal written budget request","A decision-making process where a proposal circulates for sequential approval by all relevant stakeholders","A quarterly performance review","A meeting format where the most senior person speaks last"],"answer":1,"explanation":"Ringi is Japan's circular approval system: a proposal document (ringi-sho) passes through all relevant managers for hanko (stamp) approval, bottom-up. It ensures consensus and distributes responsibility before formal announcement. Decisions take longer but implementation is faster since everyone has already bought in. Related to 'nemawashi' (informal pre-alignment)."},
     {"q":"What does 'Wa' (和) represent as a Japanese cultural value?","type":"mc","options":["Individual achievement above all else","Harmony — prioritizing group cohesion and avoiding conflict","Strict adherence to hierarchy","Competitive spirit and excellence"],"answer":1,"explanation":"'Wa' (和) means harmony and is a foundational Japanese social value — maintaining group cohesion, avoiding direct confrontation, and preserving relationships. The kanji 和 appears in the word for Japan itself (Yamato/大和). In business, 'wa' explains the preference for consensus (nemawashi, ringi) over individual decision-making."},
@@ -547,7 +666,441 @@ hr{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
     {"q":"What is a 'Ryokan' (旅館) in Japan?","type":"mc","options":["A type of Japanese fast food restaurant","A traditional Japanese inn with tatami rooms, futon beds, and often onsen","A Japanese commuter train line","A public bathhouse open to all"],"answer":1,"explanation":"A ryokan is a traditional Japanese inn featuring tatami-floored rooms, futon bedding, yukata robes, multi-course kaiseki meals, and often a natural hot spring (onsen). They embody Japanese hospitality (omotenashi). Staying in a ryokan is considered a quintessential Japanese cultural experience — popular in Kyoto, Hakone, and hot spring resort towns."},
     {"q":"What does the Japanese word 'Otaku' (オタク) originally mean?","type":"mc","options":["A disrespectful term for a foreigner","An obsessive enthusiast — originally of anime and manga, now applied to any intense hobby","A type of Japanese street food","A government worker"],"answer":1,"explanation":"'Otaku' (おたく/オタク) originally means 'your household' but evolved into slang for people with obsessive interests — initially anime, manga, and video games. In Japan it still carries a slightly negative connotation of social awkwardness. Globally it's been embraced positively. The massive Akihabara district in Tokyo is the spiritual home of otaku culture."},
     {"q":"What does the Japanese word 'Honne' (本音) mean?","type":"mc","options":["An honorific title for company presidents","One's true feelings or desires — contrasted with public behavior","A traditional Japanese musical instrument","A form of polite refusal"],"answer":1,"explanation":"'Honne' (本音, 'true sound') refers to a person's genuine feelings, desires, and opinions. It's contrasted with 'tatemae' (建前) — the public face one maintains to preserve harmony and meet social expectations. This duality is fundamental to understanding Japanese communication. Business deals, negotiations, and friendships must navigate the gap between honne and tatemae carefully."},
-    {"q":"What is 'Juku' (塾) in Japanese education?","type":"mc","options":["A university scholarship program","A private cram school where students study intensively after regular school hours","A school sports club","A government-run adult education center"],"answer":1,"explanation":"Juku (塾) are private cram schools — a fixture of Japanese education. Students attend after regular school hours to prepare for entrance exams to elite middle schools, high schools, and universities. Japan's intense academic competition ('examination hell' — juken sensou) has made juku a massive industry. Major chains like Kumon are now global. Reflects Japan's deep cultural emphasis on education."}
+    {"q":"What is 'Juku' (塾) in Japanese education?","type":"mc","options":["A university scholarship program","A private cram school where students study intensively after regular school hours","A school sports club","A government-run adult education center"],"answer":1,"explanation":"Juku (塾) are private cram schools — a fixture of Japanese education. Students attend after regular school hours to prepare for entrance exams to elite middle schools, high schools, and universities. Japan's intense academic competition ('examination hell' — juken sensou) has made juku a massive industry. Major chains like Kumon are now global. Reflects Japan's deep cultural emphasis on education."},
+    {
+    "q": "What does 可能性 (kanousei) mean in Japanese?",
+    "type": "mc",
+    "options": ["Necessity (必要性)", "Possibility / potential", "Responsibility (責任)", "Personal ability (能力)"],
+    "answer": 1,
+    "explanation": "可能性 (kanousei) means 'possibility' or 'potential.' It combines 可能 (kanou, 'possible') with 性 (sei, 'nature/quality'). Example: 成功する可能性は高い (Seikou suru kanousei wa takai) — 'The possibility of success is high.' At N3 level this word appears in discussions about plans, risks, and outcomes."
+    },
+    {
+    "q": "Choose the best English translation for 状況 (joukyou).",
+    "type": "mc",
+    "options": ["Situation / circumstances", "Result / outcome", "Opinion / view", "Experience / background"],
+    "answer": 0,
+    "explanation": "状況 (joukyou) means 'situation' or 'circumstances.' Example: 今の状況を説明してください (Ima no joukyou wo setsumei shite kudasai) — 'Please explain the current situation.' It is used in news, business, and everyday speech to describe the state of affairs."
+    },
+    {
+    "q": "Which sentence uses 経験 (keiken — experience) correctly?",
+    "type": "mc",
+    "options": ["海外での経験が仕事に役立った。(Overseas experience was useful at work.)", "経験が明日の電車で来る。(Experience will come on tomorrow's train.)", "経験を毎朝食べています。(I eat experience every morning.)", "経験はあそこの駅です。(Experience is that station over there.)"],
+    "answer": 0,
+    "explanation": "経験 (keiken) means 'experience' in the sense of things one has done or lived through. The correct sentence — 海外での経験が仕事に役立った — means 'My experience overseas was useful at work.' The other options are grammatically and semantically nonsensical combinations with 経験."
+    },
+    {
+    "q": "What does 目的 (mokuteki) mean?",
+    "type": "mc",
+    "options": ["Memory or recollection", "Purpose / goal / objective", "Method or procedure", "Personal relationship"],
+    "answer": 1,
+    "explanation": "目的 (mokuteki) means 'purpose,' 'goal,' or 'objective.' Example: このプロジェクトの目的は何ですか (Kono purojekuto no mokuteki wa nan desu ka) — 'What is the purpose of this project?' It is a key N3 business and academic vocabulary word."
+    },
+    {
+    "q": "親の考え方は子供の将来に大きな影響を与える。What does 影響 (eikyou) mean in this sentence?",
+    "type": "mc",
+    "options": ["Problem or obstacle", "Influence / impact / effect", "Personal experience", "Current situation"],
+    "answer": 1,
+    "explanation": "影響 (eikyou) means 'influence,' 'impact,' or 'effect.' The sentence translates as: 'A parent's way of thinking has a great influence on a child's future.' 影響を与える (eikyou wo ataeru) is the standard phrase meaning 'to give/exert influence.'"
+    },
+    {
+    "q": "What does 関係 (kankei) mean?",
+    "type": "mc",
+    "options": ["Cause or origin", "Relationship / connection / relevance", "Final result or outcome", "Method or approach"],
+    "answer": 1,
+    "explanation": "関係 (kankei) means 'relationship,' 'connection,' or 'relevance.' It can refer to human relationships (人間関係, ningen kankei) or logical connections between events. Example: それは私には関係ない (Sore wa watashi ni wa kankei nai) — 'That has nothing to do with me.'"
+    },
+    {
+    "q": "事故の原因は何ですか。What does 原因 (genin) mean?",
+    "type": "mc",
+    "options": ["Result or consequence", "Solution or resolution", "Cause / origin / root factor", "Time or timing"],
+    "answer": 2,
+    "explanation": "原因 (genin) means 'cause' or 'root cause.' The sentence asks: 'What is the cause of the accident?' In N3 texts, 原因 often appears with 結果 (kekka, result) to form cause-and-effect statements: 原因と結果 (genin to kekka)."
+    },
+    {
+    "q": "Which pair correctly links 原因 (genin) and 結果 (kekka)?",
+    "type": "mc",
+    "options": ["Question and Answer", "Cause and Result", "Problem and Method", "Experience and Opinion"],
+    "answer": 1,
+    "explanation": "原因 (genin) means 'cause' and 結果 (kekka) means 'result' or 'outcome.' These two words are conceptually paired in cause-and-effect reasoning. Example: 練習不足が原因で、試験の結果は悪かった — 'Due to insufficient practice (cause), the exam result (result) was poor.'"
+    },
+    {
+    "q": "問題を解決する方法を教えてください。What does 方法 (houhou) mean?",
+    "type": "mc",
+    "options": ["Result or outcome", "Reason or motivation", "Method / way / approach", "Opinion or view"],
+    "answer": 2,
+    "explanation": "方法 (houhou) means 'method,' 'way,' or 'approach.' The sentence means 'Please tell me the method to solve the problem.' A common N3 pattern is 〜する方法 (〜suru houhou) meaning 'the way to do ~'. It is more formal than やり方 (yarikata), which is its colloquial equivalent."
+    },
+    {
+    "q": "意見を述べる (iken wo noberu) means:",
+    "type": "mc",
+    "options": ["To state / express an opinion", "To ask a question politely", "To experience something new", "To cause a serious problem"],
+    "answer": 0,
+    "explanation": "意見 (iken) means 'opinion' or 'view,' and 述べる (noberu) means 'to state' or 'to express.' Together, 意見を述べる means 'to express one's opinion.' In N3 business or academic contexts, being able to 意見を述べる clearly and respectfully is an important skill."
+    },
+    {
+    "q": "考え方 (kangaekata) literally combines 考え (kangae, thought) and 方 (kata, way). It means:",
+    "type": "mc",
+    "options": ["A memory or past thought", "Way of thinking / perspective / mindset", "A difficult or confusing situation", "An important professional relationship"],
+    "answer": 1,
+    "explanation": "考え方 (kangaekata) means 'way of thinking,' 'perspective,' or 'mindset.' The suffix 〜方 (kata) attached to verb stems creates 'the way of doing X.' Example: 人によって考え方は違う (Hito ni yotte kangaekata wa chigau) — 'Ways of thinking differ depending on the person.'"
+    },
+    {
+    "q": "足元が濡れているので、気をつけてください。What does 気をつける (ki o tsukeru) mean?",
+    "type": "mc",
+    "options": ["Please sit down and rest", "Please be careful / watch out", "Please hurry up immediately", "Please wait a moment"],
+    "answer": 1,
+    "explanation": "気をつける (ki o tsukeru) means 'to be careful' or 'to watch out.' The sentence means 'The ground is wet, so please be careful.' 気 (ki) refers to spirit/awareness and つける (tsukeru) means to attach/direct. Directing your awareness toward something means paying attention to it."
+    },
+    {
+    "q": "結果は人の努力によって変わる。What grammatical role does 〜によって (ni yotte) play here?",
+    "type": "mc",
+    "options": ["Despite the effort (concessive)", "Depending on the effort / by means of the effort", "Without any effort (negative)", "Instead of effort (alternative)"],
+    "answer": 1,
+    "explanation": "〜によって (ni yotte) has several meanings: (1) depending on, (2) by means of, (3) caused by. In this sentence — 'Results change depending on a person's effort' — it expresses dependency. Compare: 国によって文化が違う (Cultures differ depending on the country). Note: よって alone can mean 'therefore' in formal writing."
+    },
+    {
+    "q": "上司に対して失礼な態度をとった。What does 〜に対して (ni taishite) express in this sentence?",
+    "type": "mc",
+    "options": ["Because of the boss's action", "Toward / regarding / in relation to the boss", "Despite the boss's instructions", "According to the boss's rules"],
+    "answer": 1,
+    "explanation": "〜に対して (ni taishite) means 'toward,' 'regarding,' or 'in relation to.' The sentence means 'He/she took a rude attitude toward his/her superior.' It indicates the target or recipient of an action or feeling. Example: 子供に対して優しくしてください — 'Please be kind toward children.'"
+    },
+    {
+    "q": "雨にもかかわらず、試合は続けられた。What does 〜にもかかわらず (ni mo kakawarazu) mean?",
+    "type": "mc",
+    "options": ["Because of the rain", "Due to the effect of rain", "Despite the rain / in spite of the rain", "After the rain had stopped"],
+    "answer": 2,
+    "explanation": "〜にもかかわらず (ni mo kakawarazu) means 'despite,' 'in spite of,' or 'regardless of.' The sentence means 'Despite the rain, the match was continued.' It is used when the result contradicts what one would expect from the condition. It is more formal than 〜のに (noni) and 〜ても (temo)."
+    },
+    {
+    "q": "学生としては、よく頑張っていると思う。What does 〜としては (to shite wa) mean?",
+    "type": "mc",
+    "options": ["Instead of being a student", "As / in the capacity of a student (from that standpoint)", "After becoming a student for the first time", "Because of being a student"],
+    "answer": 1,
+    "explanation": "〜としては (to shite wa) means 'as' or 'for' in the sense of 'speaking from the standpoint of X.' The sentence means 'As a student, I think you are doing well.' It evaluates something within the expected standards of a role or category. Example: 初めての作品としては素晴らしい — 'For a first work, it is wonderful.'"
+    },
+    {
+    "q": "日本語が嫌いなわけではない。What does 〜わけではない (wake de wa nai) convey?",
+    "type": "mc",
+    "options": ["I definitely do not like Japanese at all", "It does not mean that I dislike Japanese (partial negation)", "I have never studied Japanese before", "Japanese is too difficult for me"],
+    "answer": 1,
+    "explanation": "〜わけではない (wake de wa nai) is a partial negation meaning 'it doesn't mean that ~' or 'it's not that ~.' The sentence means 'It's not that I dislike Japanese (I just find it difficult).' It softens a statement to clarify that a strong opposite is not true. Compare: 全部食べられないわけではない — 'It's not that I can't eat everything.'"
+    },
+    {
+    "q": "彼女は日本人に違いない。What does 〜に違いない (ni chigai nai) express?",
+    "type": "mc",
+    "options": ["She might possibly be Japanese (low certainty)", "She is definitely not Japanese (strong denial)", "She must be Japanese (strong conviction)", "She used to be Japanese (past state)"],
+    "answer": 2,
+    "explanation": "〜に違いない (ni chigai nai) expresses strong personal conviction: 'must be,' 'there is no doubt that.' The sentence means 'She must be Japanese.' It differs from 〜はずだ (hazu da) in that に違いない is based on personal intuition, while はずだ is based on logical reasoning or established expectations."
+    },
+    {
+    "q": "彼はもう来るはずだ。What does 〜はずだ (hazu da) express?",
+    "type": "mc",
+    "options": ["He might come if conditions are right", "He should be coming / he is expected to come (logical expectation)", "He has already arrived here", "He definitely will not come today"],
+    "answer": 1,
+    "explanation": "〜はずだ (hazu da) expresses logical expectation based on reasoning or known facts: 'should be,' 'supposed to,' 'expected to.' The sentence means 'He should be coming by now.' If the speaker knows the schedule says he arrives at 3pm and it is 3pm, they use はずだ. Contrast with に違いない, which is based on personal gut feeling."
+    },
+    {
+    "q": "Which of the three evidential expressions — 〜ようだ, 〜らしい, 〜そうだ — most clearly conveys information heard from someone else (hearsay)?",
+    "type": "mc",
+    "options": ["〜ようだ (you da) — based on direct sensory evidence", "〜らしい (rashii) — based on information from others / hearsay", "〜そうだ (sou da) attached to verb stems — based on appearance", "All three are identical in meaning and usage"],
+    "answer": 1,
+    "explanation": "〜らしい (rashii) primarily conveys hearsay or information gathered from others: 来週、試験があるらしい — 'I heard there's an exam next week.' 〜ようだ (you da) is based on the speaker's own observation. 〜そうだ has two forms: verb-stem + そうだ (looks like it will ~) vs. plain form + そうだ (I heard that ~). N3 learners must distinguish these carefully."
+    },
+    {
+    "q": "The Meiji Restoration (明治維新, Meiji Ishin) of 1868 is best described as:",
+    "type": "mc",
+    "options": ["Japan's formal surrender ending World War II", "The end of feudal rule and the beginning of rapid modernization and westernization", "The founding of the samurai class under central government", "The beginning of the Edo period of isolation under the Tokugawa shogunate"],
+    "answer": 1,
+    "explanation": "The Meiji Restoration (明治維新) of 1868 marked the collapse of the Tokugawa shogunate and restoration of imperial rule under Emperor Meiji. Japan rapidly modernized, adopting Western technology, legal systems, and military structures. The slogan 富国強兵 (fukoku kyohei, 'rich country, strong army') captured the era's spirit. Japan went from feudal isolation to a modern industrial power within decades."
+    },
+    {
+    "q": "The Edo period (江戸時代, 1603–1868) was characterized primarily by:",
+    "type": "mc",
+    "options": ["Rapid industrialization and open foreign trade with Europe", "Military conflict and territorial expansion into Korea and China", "Political stability under Tokugawa rule and a strict policy of national isolation (鎖国, sakoku)", "Democratic elections and constitutional reform"],
+    "answer": 2,
+    "explanation": "The Edo period (江戸時代) saw Japan ruled by the Tokugawa shogunate from Edo (now Tokyo). The policy of 鎖国 (sakoku, 'closed country') severely restricted foreign contact — only Dutch and Chinese traders were permitted at Nagasaki. Despite isolation, urban culture flourished: kabuki, ukiyo-e, haiku, and merchant class arts all thrived. The period ended with the arrival of U.S. Commodore Perry's 'Black Ships' in 1853."
+    },
+    {
+    "q": "The atomic bombings of Hiroshima (広島) and Nagasaki (長崎) occurred in:",
+    "type": "mc",
+    "options": ["August 1942", "December 1943", "August 1945", "September 1947"],
+    "answer": 2,
+    "explanation": "The United States dropped atomic bombs on Hiroshima on August 6, 1945, and on Nagasaki on August 9, 1945. These remain the only uses of nuclear weapons in warfare. Japan's surrender followed on August 15. Hiroshima's Peace Memorial Park (平和記念公園) and the preserved Atomic Bomb Dome (原爆ドーム) serve as UNESCO World Heritage Sites and symbols of peace."
+    },
+    {
+    "q": "The Japanese tea ceremony (茶道, chadō or sadō) was most profoundly refined and philosophically defined by which historical figure?",
+    "type": "mc",
+    "options": ["Matsuo Basho, the haiku master", "Sen no Rikyu (千利休), the 16th-century tea master", "Tokugawa Ieyasu, the first Edo shogun", "Oda Nobunaga, the warlord who unified Japan"],
+    "answer": 1,
+    "explanation": "Sen no Rikyu (千利休, 1522–1591) is considered the greatest master of the tea ceremony (茶道). He codified the philosophy of wabi-cha (侘び茶), emphasizing simplicity, impermanence, and finding beauty in imperfection. His four principles — 和敬清寂 (wa, kei, sei, jaku: harmony, respect, purity, tranquility) — still guide the ceremony today. He served under Oda Nobunaga and Toyotomi Hideyoshi before being ordered to commit ritual suicide."
+    },
+    {
+    "q": "Shinto (神道) is best described as:",
+    "type": "mc",
+    "options": ["A form of Buddhism imported from China and Korea in the 6th century", "Japan's indigenous religion centered on kami (神, spirits) found in nature and ancestors", "A philosophical martial arts code developed by the samurai class", "A Confucian-based ethical system for government officials"],
+    "answer": 1,
+    "explanation": "Shinto (神道, 'way of the gods/kami') is Japan's indigenous spiritual tradition with no single founder or sacred scripture. Kami (神) are spirits inhabiting nature — mountains, rivers, trees, and ancestors. Shrines (神社, jinja) are Shinto's sacred spaces. Important practices include 初詣 (hatsumōde, first shrine visit of the New Year) and purification rituals. Shinto and Buddhism have coexisted in Japan for centuries, a phenomenon called 神仏習合 (shinbutsu shugo)."
+    },
+    {
+    "q": "Which of the following is considered proper onsen (温泉) etiquette in Japan?",
+    "type": "mc",
+    "options": ["Wearing a swimsuit into the communal bath area", "Thoroughly washing your body at the shower station before entering the communal bath (湯船)", "Bringing food and drinks into the hot spring pool", "Wearing sandals or shoes into the bathing room"],
+    "answer": 1,
+    "explanation": "A core rule of Japanese onsen (温泉) culture is washing oneself thoroughly at the shower stations (カランエリア) before entering the communal bath (湯船, yubune). Entering without washing is considered extremely rude. Other key etiquette rules: no swimsuits in traditional onsen, no large tattoos in many establishments (though this is changing), and keeping hair tied up and out of the water."
+    },
+    {
+    "q": "Which statement about ninja (忍者) is most historically accurate?",
+    "type": "mc",
+    "options": ["Ninja were exclusively high-ranking samurai with special government privileges", "Ninja were primarily covert agents, spies, and saboteurs — not the supernatural warriors of pop culture", "Ninja always wore distinctive all-black outfits to identify themselves in public", "Ninja and samurai belonged to the same warrior social class"],
+    "answer": 1,
+    "explanation": "Historically, ninja (忍者) — also called shinobi (忍び) — were covert agents skilled in espionage (間諜), sabotage, and guerrilla tactics. Their arts, called ninjutsu (忍術), valued stealth and deception over open combat. They were often from lower social classes than samurai. The black outfit (黒装束) is largely a theatrical invention. Major ninja clans came from Iga (伊賀) and Kōka (甲賀) regions in present-day Mie and Shiga prefectures."
+    },
+    {
+    "q": "Which statement about geisha (芸者) is most accurate?",
+    "type": "mc",
+    "options": ["Geisha are traditional performing artists skilled in music, dance, and sophisticated conversation", "Geisha and prostitutes (遊女) are historically and functionally the same profession", "Geisha exclusively perform religious ceremonies at Shinto shrines", "Geisha are a Tokyo-exclusive institution and are not found in Kyoto"],
+    "answer": 0,
+    "explanation": "Geisha (芸者, 'person of art') are highly trained traditional entertainers. They spend years mastering instruments like the shamisen (三味線), classical dance (日本舞踊), tea ceremony, and the art of witty conversation. In Kyoto they are called 芸妓 (geiko), and apprentices are called 舞妓 (maiko). Confusing geisha with prostitutes (遊女, yuujo) is a significant misunderstanding — the two professions were legally and socially distinct."
+    },
+    {
+    "q": "The haiku (俳句) poet Matsuo Basho (松尾芭蕉) is best known for which famous poem?",
+    "type": "mc",
+    "options": ["春はあけぼの — 'In spring, it is the dawn' (from The Pillow Book)", "古池や蛙飛び込む水の音 — 'The old pond — a frog jumps in, sound of water'", "平家物語の冒頭 — Opening of The Tale of the Heike", "君が代 — Japan's national anthem"],
+    "answer": 1,
+    "explanation": "Matsuo Basho (1644–1694) is considered the master of haiku (俳句). His most celebrated poem — 古池や蛙飛び込む水の音 (furuike ya / kawazu tobikomu / mizu no oto) — is often called the most famous haiku ever written. It captures a single moment of stillness interrupted by a sound. Basho also wrote the travel memoir 奥の細道 (Oku no Hosomichi, 'The Narrow Road to the Deep North'), a cornerstone of Japanese literature."
+    },
+    {
+    "q": "Who is known as the 'God of Manga' (漫画の神様) and is considered the godfather of modern Japanese manga?",
+    "type": "mc",
+    "options": ["Akira Toriyama, creator of Dragon Ball", "Osamu Tezuka (手塚治虫), creator of Astro Boy and Black Jack", "Hayao Miyazaki, co-founder of Studio Ghibli", "Rumiko Takahashi, creator of Inuyasha"],
+    "answer": 1,
+    "explanation": "Osamu Tezuka (手塚治虫, 1928–1989) is called the '漫画の神様' (God of Manga). He revolutionized manga with cinematic storytelling, film-influenced panel layouts, and complex narratives. His works include 鉄腕アトム (Astro Boy), ブラック・ジャック (Black Jack), and ジャングル大帝 (Kimba the White Lion). He also pioneered Japanese animation (anime), founding the style that defines the industry today."
+    },
+    {
+    "q": "Studio Ghibli (スタジオジブリ), Japan's most celebrated animation studio, is most closely associated with which director?",
+    "type": "mc",
+    "options": ["Satoshi Kon, director of Perfect Blue", "Mamoru Oshii, director of Ghost in the Shell", "Hayao Miyazaki (宮崎駿), director of Spirited Away and My Neighbor Totoro", "Hideaki Anno, creator of Neon Genesis Evangelion"],
+    "answer": 2,
+    "explanation": "Hayao Miyazaki (宮崎駿, born 1941) co-founded Studio Ghibli in 1985 with Isao Takahata. His films — including となりのトトロ (My Neighbor Totoro), 千と千尋の神隠し (Spirited Away, which won the Academy Award for Best Animated Feature in 2003), and もののけ姫 (Princess Mononoke) — are celebrated for their environmental themes, complex female protagonists, and hand-drawn artistry."
+    },
+    {
+    "q": "The famous ukiyo-e (浮世絵) woodblock print 'The Great Wave off Kanagawa' (神奈川沖浪裏) was created by which artist?",
+    "type": "mc",
+    "options": ["Utagawa Hiroshige, known for landscape series Fifty-three Stations of the Tokaido", "Kitagawa Utamaro, known for bijin-ga portraits of beautiful women", "Katsushika Hokusai (葛飾北斎), from his Thirty-six Views of Mount Fuji series", "Tōshūsai Sharaku, known for kabuki actor portraits"],
+    "answer": 2,
+    "explanation": "Katsushika Hokusai (葛飾北斎, 1760–1849) created 'The Great Wave off Kanagawa' (神奈川沖浪裏) as part of his series 富嶽三十六景 (Thirty-six Views of Mount Fuji). Ukiyo-e (浮世絵, 'pictures of the floating world') depicted entertainment, landscapes, and everyday Edo-period life. Hokusai's work profoundly influenced Western Impressionists like Monet and Van Gogh through a phenomenon called Japonisme."
+    },
+    {
+    "q": "Taiko (太鼓) refers to:",
+    "type": "mc",
+    "options": ["A traditional Japanese transverse flute made from bamboo", "Traditional Japanese drums used in festivals, ceremonies, and the performing arts", "A 13-stringed traditional Japanese zither instrument", "A form of Japanese calligraphic brushwork"],
+    "answer": 1,
+    "explanation": "太鼓 (taiko) means 'drum' in Japanese and refers broadly to Japanese drums. Taiko drumming (和太鼓, wadaiko) is central to festivals (祭り, matsuri), Shinto ceremonies, and kabuki theater. Modern ensemble taiko performance (kumi-daiko, 組太鼓) was popularized in the 1950s and spread globally. Famous taiko groups include Kodo (鼓童) based on Sado Island."
+    },
+    {
+    "q": "The koto (琴) is best described as:",
+    "type": "mc",
+    "options": ["A Japanese bamboo flute played vertically", "A traditional Japanese percussion instrument used in Noh theater", "A traditional Japanese stringed instrument with 13 strings, played by plucking", "A type of large ceremonial taiko drum"],
+    "answer": 2,
+    "explanation": "The koto (琴) is Japan's national instrument — a long, horizontal zither with traditionally 13 strings (modern versions may have 17 or 21). Players wear picks (爪, tsume) on their fingers to pluck the strings. The instrument features moveable bridges (柱, ji) that change pitch. The koto is central to classical Japanese court music (雅楽, gagaku) and traditional chamber music (箏曲, soukyoku)."
+    },
+    {
+    "q": "The shakuhachi (尺八) is:",
+    "type": "mc",
+    "options": ["A type of short Japanese sword used in iaido practice", "A traditional end-blown bamboo flute associated with Zen Buddhist meditation", "A form of woodblock printing on silk fabric", "A large double-headed ceremonial drum"],
+    "answer": 1,
+    "explanation": "The shakuhachi (尺八) is a Japanese end-blown flute made from the root end of bamboo. Its name refers to its standard length: 一尺八寸 (issaku hassun, 'one shaku and eight sun' = about 54.5 cm). It was historically played by 虚無僧 (komusō), wandering Zen monks who used music as meditation. The shakuhachi produces a distinctive breathy, haunting tone and is used in classical, jazz, and contemporary music worldwide."
+    },
+    {
+    "q": "Bonsai (盆栽) is the Japanese art of:",
+    "type": "mc",
+    "options": ["Arranging fresh flowers according to seasonal principles (ikebana)", "Cultivating miniature trees in containers through pruning, wiring, and shaping", "Repairing broken ceramics with gold or silver lacquer", "Creating decorative folded paper sculptures"],
+    "answer": 1,
+    "explanation": "Bonsai (盆栽) combines 盆 (bon, 'tray/pot') and 栽 (sai, 'planting'). It is the art of growing miniature trees that mirror the shape and spirit of full-sized trees in nature. Originally imported from China (where it is called penjing/penzai), bonsai became a refined Japanese art form. Masters spend decades shaping trees through careful pruning, wiring, and controlling soil and water. Some bonsai trees are hundreds of years old and considered national treasures."
+    },
+    {
+    "q": "Kintsugi (金継ぎ) is the Japanese art of:",
+    "type": "mc",
+    "options": ["Arranging flowers according to wabi-sabi principles of impermanence", "Repairing broken ceramics by filling the cracks with gold, silver, or platinum lacquer", "Wrapping gifts and objects in decorative cloth for presentation", "Cultivating miniature trees as a form of meditative practice"],
+    "answer": 1,
+    "explanation": "Kintsugi (金継ぎ, 'golden joinery') is the practice of repairing broken pottery with lacquer mixed with powdered gold, silver, or platinum. Rather than hiding the damage, kintsugi highlights the breaks, making them beautiful. This embodies the Japanese philosophy that breakage and repair are part of an object's history. It relates to wabi-sabi (侘び寂び) — finding beauty in imperfection and impermanence."
+    },
+    {
+    "q": "Furoshiki (風呂敷) is:",
+    "type": "mc",
+    "options": ["A traditional Japanese multi-course meal presentation style", "A type of lightweight Japanese cotton bathrobe worn at ryokan", "A traditional square cloth used for wrapping and carrying items, often in decorative patterns", "A method of Japanese lacquerware preparation"],
+    "answer": 2,
+    "explanation": "Furoshiki (風呂敷) is a traditional square cloth used to wrap, carry, and present items. The name may derive from 風呂 (furo, bath) and 敷く (shiku, to spread), as it was once used in bathhouses. Today it is used to wrap gifts, carry groceries, or transport bento boxes. Furoshiki is celebrated as an eco-friendly alternative to plastic bags and has seen a modern revival promoted by Japan's Ministry of the Environment."
+    },
+    {
+    "q": "The Daruma doll (達磨, Daruma) tradition in Japan involves:",
+    "type": "mc",
+    "options": ["Painting in one eye when making a wish, then the other eye when the wish is fulfilled", "Breaking the doll at the New Year to release the previous year's bad luck", "Floating the doll down a river during the Obon festival for ancestral spirits", "Burning the doll at a temple bonfire to ward off evil spirits at New Year"],
+    "answer": 0,
+    "explanation": "The Daruma doll (達磨) is modeled on Bodhidharma (達磨大師), the founder of Zen Buddhism, who is said to have meditated for nine years until his limbs withered. When setting a goal, you paint in one eye (目を入れる); when the goal is achieved, you paint in the other. The blank eyes represent focus and determination. Doll shapes are weighted at the bottom so they always right themselves — symbolizing resilience: 七転び八起き (nana korobi ya oki, 'fall seven times, get up eight')."
+    },
+    {
+    "q": "Ninjutsu (忍術) refers to:",
+    "type": "mc",
+    "options": ["The ethical code and way of the samurai warrior", "The arts, techniques, and philosophy practiced by ninja, including stealth, espionage, and survival skills", "A form of seated Buddhist meditation and breathing practice", "The traditional Japanese art of flower arrangement"],
+    "answer": 1,
+    "explanation": "Ninjutsu (忍術, 'the art of stealth') encompasses the covert techniques used by ninja (忍者/忍び). This included 諜報活動 (espionage), 変装 (disguise), sabotage, and unconventional combat. The most famous ninjutsu traditions came from the Iga (伊賀流) and Kōka (甲賀流) schools. Today Bujinkan Budo Taijutsu, taught by Masaaki Hatsumi, preserves historical ninjutsu as a martial art."
+    },
+    {
+    "q": "Hokkaido (北海道), Japan's northernmost main island, is best known for:",
+    "type": "mc",
+    "options": ["Having Japan's largest population density and proximity to Tokyo", "Harsh winters, vast agricultural land, and being home to the indigenous Ainu (アイヌ) people", "A subtropical climate with coral reefs and U.S. military presence", "Being Japan's smallest prefecture by land area"],
+    "answer": 1,
+    "explanation": "Hokkaido (北海道) is Japan's largest prefecture and second-largest island. It was formally incorporated into Japan in 1869 (as Hokkaido Development Commission, 開拓使). The indigenous Ainu (アイヌ) people have lived there for millennia; Japan officially recognized them as indigenous in 2019. Hokkaido is famous for dairy products, lavender fields in Furano (富良野), skiing at Niseko (ニセコ), and the Sapporo Snow Festival (さっぽろ雪まつり)."
+    },
+    {
+    "q": "Okinawa (沖縄) is culturally and historically distinct from mainland Japan (本土) primarily because:",
+    "type": "mc",
+    "options": ["It was never part of Japan and only became a Japanese prefecture in the year 2000", "It was the Ryukyu Kingdom (琉球王国), an independent nation with its own language and culture until 1879", "It is the only prefecture where Shinto has no historical presence", "Its climate is colder than Hokkaido due to ocean currents"],
+    "answer": 1,
+    "explanation": "Okinawa was the independent Ryukyu Kingdom (琉球王国) until it was formally annexed by Japan in 1879 during the Meiji era. Okinawans speak Ryukyuan languages (琉球語), distinct from standard Japanese. The islands have a unique culture — Ryukyuan music (三線, sanshin), cuisine (チャンプルー, champuru), and karate (空手, which originated in Okinawa). After WWII, the U.S. administered Okinawa until 1972."
+    },
+    {
+    "q": "Kyoto (京都) served as Japan's imperial capital for approximately how many years before the capital moved to Tokyo in 1869?",
+    "type": "mc",
+    "options": ["Approximately 100 years (since 1769)", "Approximately 400 years (since 1469)", "Approximately 1,000 years (since 794)", "Approximately 50 years (since 1819)"],
+    "answer": 2,
+    "explanation": "Kyoto (京都, 'capital city') was established as the imperial capital in 794 CE when Emperor Kanmu moved the court there, naming it Heiankyō (平安京). It remained the imperial seat for over 1,000 years until Emperor Meiji relocated to Tokyo (then Edo) in 1869. Kyoto preserves over 1,600 Buddhist temples, 400 Shinto shrines, and 17 UNESCO World Heritage Sites, making it Japan's cultural heartland."
+    },
+    {
+    "q": "The concept of 'kuidaore' (食い倒れ), strongly associated with Osaka (大阪), means:",
+    "type": "mc",
+    "options": ["Working yourself to exhaustion for the company", "Ruining yourself financially through food and eating — a celebration of Osaka's food culture", "Saving money through extremely frugal eating habits", "Learning a skill through repeated eating experiences"],
+    "answer": 1,
+    "explanation": "食い倒れ (kuidaore) literally means 'to eat until you collapse / to ruin yourself eating.' It reflects Osaka's famous food culture and the local saying 大阪の食い倒れ (Osaka no kuidaore). Osaka residents are stereotyped as preferring to spend money on food above all else. The city's Dotonbori (道頓堀) district and Kuromon Market (黒門市場) exemplify this culture. Osaka is famous for たこ焼き (takoyaki), お好み焼き (okonomiyaki), and 551蓬莱 (551 Hourai) pork buns."
+    },
+    {
+    "q": "Furusato (故郷) is a Japanese concept meaning:",
+    "type": "mc",
+    "options": ["A type of Japanese regional home-style cooking", "One's hometown or native place, carrying deep feelings of nostalgia and belonging", "A traditional autumn harvest festival celebrated nationwide", "The emperor's ancestral palace and ceremonial grounds"],
+    "answer": 1,
+    "explanation": "故郷 (furusato) means 'hometown' or 'native village' and carries profound emotional weight in Japanese culture. It evokes nostalgia (懐かしさ, natsukashisa) for one's roots, childhood, and family. The concept permeates Japanese literature, folk songs (民謡, minyou), and policy — the government's 'Furusato Nozei' (ふるさと納税, hometown tax donation) system allows Japanese citizens to donate tax money to regions they feel connected to."
+    },
+    {
+    "q": "Seijin no Hi (成人の日), celebrated on the second Monday of January, is a ceremony honoring:",
+    "type": "mc",
+    "options": ["Children who turn 7, 5, or 3 years old during the year (Shichi-go-san)", "People who turned 20 years old (or 18 since 2022) in the past year, marking their entry into adulthood", "All Japanese adults over 65 years old for their contributions to society", "Couples celebrating significant wedding anniversaries"],
+    "answer": 1,
+    "explanation": "成人の日 (Seijin no Hi, Coming of Age Day) celebrates young people who have reached adulthood. The age of adulthood (成人, seijin) was lowered from 20 to 18 in April 2022. Participants typically wear formal traditional dress — women in furisode (振袖, long-sleeved kimono) and men in hakama (袴) or suits. Local governments hold ceremonies (成人式, seijin-shiki), and the day is a national holiday."
+    },
+    {
+    "q": "Taue (田植え) refers to which activity central to Japanese agricultural culture?",
+    "type": "mc",
+    "options": ["The autumn harvest of rice (稲刈り, inekari)", "The spring ceremony of transplanting rice seedlings into flooded paddies", "A traditional fish market ritual blessing the year's catch", "A Shinto purification ceremony performed at rice shrines"],
+    "answer": 1,
+    "explanation": "田植え (taue, rice planting) is the labor-intensive process of transplanting rice seedlings from nursery beds into flooded paddies, traditionally done in early summer. It was historically a communal activity accompanied by ritual songs (田植え唄, taue uta) to pray for a good harvest. Rice (米, kome) is central to Japanese civilization — 稲作 (inasaku, rice cultivation) has shaped Japan's agricultural society, religious practices, and national identity for over 3,000 years."
+    },
+    {
+    "q": "Osechi ryouri (おせち料理) refers to:",
+    "type": "mc",
+    "options": ["Special foods served at summer Bon festival gatherings for the deceased", "Traditional Japanese New Year foods, each carrying specific symbolic meanings for the coming year", "Ceremonial foods offered at Buddhist funeral services and memorial rites", "Regional specialty dishes from the Osaka food culture tradition"],
+    "answer": 1,
+    "explanation": "おせち料理 (osechi ryouri) are traditional multi-layered lacquer box meals (重箱, jubako) eaten during the Japanese New Year (お正月, oshougatsu). Each dish carries a symbolic meaning: 黒豆 (kuromame, black beans) = working diligently; 数の子 (kazunoko, herring roe) = fertility; 栗きんとん (kurikinton, chestnut paste) = wealth. Osechi was traditionally prepared to last 3 days so women could rest from cooking during the holiday."
+    },
+    {
+    "q": "Kouhaku Uta Gassen (紅白歌合戦) is:",
+    "type": "mc",
+    "options": ["A nationally broadcast sumo wrestling tournament held on New Year's Day", "NHK's annual New Year's Eve music program in which Japan's top artists compete as Red (female) and White (male) teams", "A traditional fireworks competition broadcast on January 1st each year", "A regional dance and singing competition held at local Shinto shrines"],
+    "answer": 1,
+    "explanation": "紅白歌合戦 (Kouhaku Uta Gassen, 'Red and White Song Battle') is NHK's premier New Year's Eve music broadcast, airing December 31 each year since 1951. Japan's most popular artists are divided into 紅組 (red team, traditionally female) and 白組 (white team, traditionally male). Being invited to perform is considered one of the highest honors in Japanese entertainment. The program typically draws tens of millions of viewers."
+    },
+    {
+    "q": "Shichi-go-san (七五三) is a traditional Japanese ceremony held for children at which ages?",
+    "type": "mc",
+    "options": ["Ages 1, 3, and 5 years old", "Ages 3, 5, and 7 years old", "Ages 5, 10, and 15 years old", "Ages 7, 12, and 15 years old"],
+    "answer": 1,
+    "explanation": "七五三 (Shichi-go-san, 'seven-five-three') is celebrated on November 15 for children aged 3 (boys and girls), 5 (boys), and 7 (girls). Families visit Shinto shrines in traditional dress to pray for the children's health and growth. Children receive 千歳飴 (chitose-ame, 'thousand-year candy') in long red-and-white bags symbolizing longevity. The ceremony reflects traditional Japanese beliefs about auspicious odd numbers."
+    },
+    {
+    "q": "In the Japanese business communication framework ホウ・レン・ソウ (Hou-Ren-Sou), what does 報告 (houkoku) specifically mean?",
+    "type": "mc",
+    "options": ["Consulting a superior before making a decision (seeking guidance)", "Reporting progress, results, or updates to a superior or team", "Coordinating and communicating changes to relevant colleagues", "Formally documenting company procedures in writing"],
+    "answer": 1,
+    "explanation": "ホウレンソウ is an acronym for the three pillars of Japanese workplace communication: 報告 (Hou, houkoku = reporting), 連絡 (Ren, renraku = notifying/informing colleagues), and 相談 (Sou, soudan = consulting/seeking advice). 報告 specifically refers to reporting the results and status of assigned work back to one's superior. This framework is considered fundamental to Japanese workplace culture and is taught to all new employees (新入社員, shinnyu shain)."
+    },
+    {
+    "q": "In the ホウ・レン・ソウ (Hou-Ren-Sou) framework, what does 相談 (soudan) mean?",
+    "type": "mc",
+    "options": ["Reporting completed work results to a supervisor", "Sending routine notifications about schedule changes to team members", "Consulting with or seeking advice from a superior or colleague before proceeding", "Formally documenting procedures in the company's internal system"],
+    "answer": 2,
+    "explanation": "相談 (soudan) means 'consultation' or 'seeking advice.' In ホウレンソウ, 相談 means proactively consulting a superior or colleague when you face a problem, uncertainty, or decision that is beyond your authority or experience. Japanese workplace culture values 相談 because it prevents costly individual mistakes. The phrase よく相談してから決めます (I will decide after consulting carefully) demonstrates this value."
+    },
+    {
+    "q": "空気を読む (kuuki o yomu) literally means 'to read the air/atmosphere.' In social contexts it refers to:",
+    "type": "mc",
+    "options": ["Checking weather conditions before planning an outdoor company event", "Perceiving unspoken social cues and adjusting behavior to fit the group's mood and expectations", "Openly expressing your true feelings to avoid misunderstanding", "Asking direct clarifying questions when you sense tension in a meeting"],
+    "answer": 1,
+    "explanation": "空気を読む (kuuki o yomu) is a key social skill in Japan — reading the implicit atmosphere and acting accordingly without being told explicitly. Someone who cannot do this is called KY (ケーワイ, from 'kuuki yomenai', 'cannot read the air') — a social criticism. This connects to Japan's high-context communication culture (高文脈文化) where much is conveyed through implication, tone, and social context rather than direct speech."
+    },
+    {
+    "q": "礼儀 (reigi) most accurately refers to:",
+    "type": "mc",
+    "options": ["A traditional Japanese multi-course kaiseki meal format", "Etiquette, manners, and proper decorum as cultural and social norms", "A structured business reporting system used in Japanese companies", "A seasonal ceremony marking transitions between Japan's four seasons"],
+    "answer": 1,
+    "explanation": "礼儀 (reigi) means 'etiquette,' 'manners,' or 'propriety.' It is foundational to Japanese social interaction — from how to bow (お辞儀, ojigi) to proper use of honorific language (敬語, keigo). The phrase 礼儀正しい (reigi tadashii) means 'well-mannered' or 'proper.' Japanese society places great emphasis on 礼儀 in all spheres: business, family, and public life. 礼儀作法 (reigi sahō) refers to the formal rules of etiquette."
+    },
+    {
+    "q": "間 (ma) is a Japanese aesthetic and philosophical concept referring to:",
+    "type": "mc",
+    "options": ["A specific style of traditional Japanese musical composition", "The meaningful pause, empty space, or interval between things — absence as a form of expression", "The formal brushwork technique in Japanese calligraphy (書道)", "A type of theatrical dramatic pause used only in Noh performances"],
+    "answer": 1,
+    "explanation": "間 (ma) is one of Japan's most distinctive cultural concepts — the artful use of negative space, silence, or pause. In music, it is the meaningful silence between notes. In architecture, it is the empty space in a room. In conversation, a well-timed pause (間を置く, ma wo oku) can communicate more than words. In Noh theater, the long silences are as expressive as the movements. 間 reflects a Japanese aesthetic that values emptiness and restraint as positive forces."
+    },
+    {
+    "q": "木漏れ日 (komorebi) is a Japanese word that specifically describes:",
+    "type": "mc",
+    "options": ["The sound of wind rustling through a bamboo grove at dusk", "The interplay of sunlight and shadows filtering through leaves in a forest or grove", "The distinctive smell of rain falling on dry earth after a dry spell", "The emotional feeling of nostalgia for a place one has never actually visited"],
+    "answer": 1,
+    "explanation": "木漏れ日 (komorebi) combines 木 (ki, tree), 漏れ (more, leaking/filtering), and 日 (hi, sunlight). It describes the beautiful phenomenon of dappled sunlight filtering through tree leaves, creating shifting patterns of light and shadow. Japanese has many such untranslatable words capturing specific natural or emotional phenomena. Similar words include 物の哀れ (mono no aware, the pathos of things) and 侘び寂び (wabi-sabi, beauty of impermanence)."
+    },
+    {
+    "q": "過労死 (karoshi) refers to:",
+    "type": "mc",
+    "options": ["Death from a sudden workplace accident or industrial injury", "Death caused by overwork — typically heart attack or stroke due to extreme stress and excessive hours", "A traditional Japanese philosophy of dedicating one's life to one's company", "Voluntary early retirement from the workforce before age 60"],
+    "answer": 1,
+    "explanation": "過労死 (karoshi) combines 過労 (karou, overwork) and 死 (shi, death). It refers to death caused by work-related stress and extreme hours — typically through heart attack (心臓発作), stroke (脳卒中), or suicide (過労自殺). Japan recognized karoshi as a legal cause of death in the 1980s. The government's 働き方改革 (hatarakikata kaikaku, Work Style Reform) legislation (2018) aims to cap overtime at 100 hours per month, though critics say the limit is still dangerously high."
+    },
+    {
+    "q": "引きこもり (hikikomori) describes:",
+    "type": "mc",
+    "options": ["A person who travels extensively for remote work across Japan's regions", "A modern social phenomenon of severe withdrawal from society, often involving staying home for six months or more", "A traditional Japanese apprenticeship system for skilled craftspeople", "A type of mountain hermit or religious ascetic in classical Japanese history"],
+    "answer": 1,
+    "explanation": "引きこもり (hikikomori, from 引き籠もる, 'to shut oneself in') describes individuals who withdraw from society and remain in their homes or rooms for extended periods (defined as 6 months or more). Japan's Ministry of Health estimates over one million hikikomori. Causes include academic pressure, social anxiety, bullying (いじめ, ijime), and family dynamics. The phenomenon, first described by psychiatrist Tamaki Saito in the 1990s, has been recognized in other countries as 'hikikomori syndrome.'"
+    },
+    {
+    "q": "Which sentence correctly uses 〜によって (ni yotte) to express 'depending on'?",
+    "type": "mc",
+    "options": ["人によって意見が違う。(Opinions differ depending on the person.)", "人によって電車が来る。(The train comes because of the people.)", "人によって昨日ご飯を食べた。(I ate yesterday depending on people — nonsensical)", "人によって天気がいい。(The weather is good toward the people — nonsensical)"],
+    "answer": 0,
+    "explanation": "人によって意見が違う (Hito ni yotte iken ga chigau) correctly uses 〜によって to mean 'depending on.' This is one of 〜によって's core functions: showing variation based on circumstances. Other examples: 国によって文化が違う (Cultures differ by country), 季節によって服が変わる (Clothes change depending on the season). The key pattern is: [variable factor] + によって + [varying result]."
+    },
+    {
+    "q": "Which sentence most accurately demonstrates 〜に対して (ni taishite) meaning 'in response to' or 'regarding'?",
+    "type": "mc",
+    "options": ["彼の質問に対して、丁寧に答えた。(I answered his question politely / in response to his question.)", "彼の質問に対して、電車に乗った。(I rode the train in response to his question — illogical)", "彼の質問に対して、天気がよかった。(The weather was good toward his question — nonsensical)", "彼の質問に対して、料理を作った。(I cooked food because of his question — illogical)"],
+    "answer": 0,
+    "explanation": "彼の質問に対して、丁寧に答えた correctly uses 〜に対して to mean 'in response to' or 'regarding.' 〜に対して marks the target of an action, attitude, or feeling: 批判に対して反論する (to argue back against criticism), お客様に対して礼儀正しく (to be polite toward customers). It can also mark contrast: 都市と対して、田舎は静かだ (In contrast to cities, the countryside is quiet)."
+    },
+    {
+    "q": "Which sentence correctly uses 〜にもかかわらず (ni mo kakawarazu) to show a result that contradicts the given condition?",
+    "type": "mc",
+    "options": ["努力したにもかかわらず、試験に失敗した。(Despite having worked hard, I failed the exam.)", "努力したにもかかわらず、また頑張ってください。(Despite effort, please try again — incorrect structure)", "努力にもかかわらず、明日も練習します。(Despite effort, I'll practice tomorrow — lacks contrast)", "努力したにもかかわらず、努力は大切だ。(Despite effort, effort is important — tautological)"],
+    "answer": 0,
+    "explanation": "〜にもかかわらず (ni mo kakawarazu) requires a genuine contrast between the condition and the result. 努力したにもかかわらず、試験に失敗した (Despite working hard, I failed the exam) perfectly demonstrates this — the expected outcome of hard work is success, so failure is the surprising contrast. The structure is: [unexpected condition] + にもかかわらず + [contrasting, often disappointing result]. It is more formal than 〜のに (noni)."
+    },
+    {
+    "q": "What is the key grammatical difference between 〜はずだ (hazu da) and 〜に違いない (ni chigai nai), both meaning 'must be / should be'?",
+    "type": "mc",
+    "options": ["〜はずだ expresses logical expectation based on facts/rules, while 〜に違いない expresses the speaker's strong personal conviction", "They are completely interchangeable in all situations with no difference in nuance", "〜はずだ can only be used for past events, while 〜に違いない is only for future events", "〜に違いない is exclusively used in formal written documents, never in spoken Japanese"],
+    "answer": 0,
+    "explanation": "〜はずだ (hazu da) expresses expectation grounded in objective facts, rules, or prior knowledge: 電車は3時に来るはずだ (The train should come at 3 — based on the schedule). 〜に違いない (ni chigai nai) expresses the speaker's strong subjective conviction: あの人は外国人に違いない (That person must be a foreigner — I feel certain). When the speaker bases their certainty on personal intuition rather than documented facts, 〜に違いない is more appropriate."
+    }
   ],
   "trivia": [
     {"q":"What is the capital city of Japan?","type":"mc","options":["Osaka","Kyoto","Hiroshima","Tokyo"],"answer":3,"explanation":"Tokyo (東京, 'Eastern Capital') became Japan's capital in 1869 when Emperor Meiji moved from Kyoto. Greater Tokyo is the world's largest metropolitan area with ~37 million people. 'Tokyo' was formerly called Edo."},
@@ -708,6 +1261,25 @@ const CAT_META    = {
   japanese_n3: { label:'Japanese N3', emoji:'⛩️',  color:'#8B5CF6', dim:'rgba(139,92,246,.15)' },
   trivia:   { label:'General Trivia',  emoji:'🧠', color:'#8B5CF6', dim:'rgba(139,92,246,.15)' },
 };
+function catBtn(cat, handler, active) {
+  const m = CAT_META[cat];
+  const lbl = m.label.replace('Japanese ','');
+  const style = active ? `border-color:${m.color};background:${m.dim};color:var(--text)` : '';
+  return `<button class="study-cat-btn${active?' active':''}"${style?` style="${style}"`:''}onclick="${handler}('${cat}')">${m.emoji} ${lbl}</button>`;
+}
+function japDropHTML(toggleFn) {
+  const levels = ['japanese_n5','japanese_n4','japanese_n3'];
+  const anyActive = levels.some(c=>study.cats.includes(c));
+  const panel = study.japDropOpen ? `<div class="jap-drop-panel">
+    ${levels.map(c=>{
+      const m=CAT_META[c]; const on=study.cats.includes(c);
+      const st=on?`style="color:${m.color}"`:'';
+      return `<button class="jap-opt" ${st} onclick="${toggleFn}('${c}')">${m.emoji} ${m.label.replace('Japanese ','')}${on?' ✓':''}</button>`;
+    }).join('')}
+  </div>` : '';
+  const overlay = study.japDropOpen ? `<div class="jap-overlay" onclick="closeJapDrop()"></div>` : '';
+  return `${overlay}<div class="jap-drop"><button class="study-cat-btn${anyActive?' active':''}" onclick="toggleJapDrop()">🗾 Japanese ▾</button>${panel}</div>`;
+}
 const BADGE_DEFS  = [
   { id:'first_answer',    emoji:'🌱', name:'First Answer',    check:(s)    => s.totalAnswered >= 1 },
   { id:'on_fire',         emoji:'🔥', name:'On Fire',         check:(s)    => s.streak >= 7 },
@@ -1238,7 +1810,7 @@ function switchTab(tab) {
 
 // =================== STUDY ===================
 const STUDY_COUNTS = [5, 10, 20, 50];
-let study = { mode:'home', cats:['finance','japanese_n5','japanese_n4','japanese_n3','trivia'], count:10, questions:[], idx:0, revealed:false, chosen:null, answers:[] };
+let study = { mode:'home', cats:['finance','japanese_n5','japanese_n4','japanese_n3','trivia'], count:10, questions:[], idx:0, revealed:false, chosen:null, answers:[], japDropOpen:false };
 
 function shuffle(arr) {
   const a = [...arr];
@@ -1287,9 +1859,18 @@ function rebuildFlashcardDeck() {
   study.questions = shuffle(study.cats.flatMap(c => Q[c].map(q => ({...q,category:c}))));
   study.idx = 0; study.revealed = false;
 }
+function toggleJapDrop() { study.japDropOpen = !study.japDropOpen; renderStudyView(); }
+function closeJapDrop() { study.japDropOpen = false; renderStudyView(); }
 function flashcardToggleCat(cat) {
   if (study.cats.includes(cat)) { if (study.cats.length===1) return; study.cats=study.cats.filter(c=>c!==cat); }
   else study.cats.push(cat);
+  study.japDropOpen = false;
+  rebuildFlashcardDeck(); renderStudyView();
+}
+function flashcardToggleJap(cat) {
+  if (study.cats.includes(cat)) { if (study.cats.length===1) return; study.cats=study.cats.filter(c=>c!==cat); }
+  else study.cats.push(cat);
+  study.japDropOpen = true;
   rebuildFlashcardDeck(); renderStudyView();
 }
 function flashcardReveal() { study.revealed=true; renderStudyView(); }
@@ -1302,12 +1883,11 @@ function flashcardHTML() {
   if (!q) return `<p style="color:var(--muted);text-align:center;padding:2rem">No questions available.</p>`;
   const m = CAT_META[q.category];
   const keys = q.type==='tf' ? ['T','F'] : ['A','B','C','D'];
-  const japLevels = ['japanese_n5','japanese_n4','japanese_n3'];
-  const catBtns = `
-    <button class="study-cat-btn ${study.cats.includes('finance')?'active':''}" onclick="flashcardToggleCat('finance')">📈 Capital Markets</button>
-    <span style="color:var(--muted);font-size:.72rem;padding:.2rem .2rem 0">Japanese:</span>
-    ${japLevels.map(c=>`<button class="study-cat-btn ${study.cats.includes(c)?'active':''}" onclick="flashcardToggleCat('${c}')">${CAT_META[c].emoji} ${CAT_META[c].label.replace('Japanese ','')}</button>`).join('')}
-    <button class="study-cat-btn ${study.cats.includes('trivia')?'active':''}" onclick="flashcardToggleCat('trivia')">🧠 General Trivia</button>`;
+  const catBtns = [
+    catBtn('finance','flashcardToggleCat',study.cats.includes('finance')),
+    japDropHTML('flashcardToggleJap'),
+    catBtn('trivia','flashcardToggleCat',study.cats.includes('trivia')),
+  ].join('');
   const optsHTML = study.revealed
     ? `<button class="opt correct" disabled><span class="opt-key">${keys[q.answer]}</span>${q.options[q.answer]}</button>`
     : '';
@@ -1337,6 +1917,13 @@ function startMockSetup() {
 function mockToggleCat(cat) {
   if (study.cats.includes(cat)) { if (study.cats.length===1) return; study.cats=study.cats.filter(c=>c!==cat); }
   else study.cats.push(cat);
+  study.japDropOpen = false;
+  renderStudyView();
+}
+function mockToggleJap(cat) {
+  if (study.cats.includes(cat)) { if (study.cats.length===1) return; study.cats=study.cats.filter(c=>c!==cat); }
+  else study.cats.push(cat);
+  study.japDropOpen = true;
   renderStudyView();
 }
 function mockSetCount(n) { study.count=n; renderStudyView(); }
@@ -1348,12 +1935,11 @@ function startMockPlay() {
 }
 function mockSetupHTML() {
   const total = study.cats.reduce((s,c)=>s+Q[c].length,0);
-  const japLevels = ['japanese_n5','japanese_n4','japanese_n3'];
-  const catBtns = `
-    <button class="study-cat-btn ${study.cats.includes('finance')?'active':''}" onclick="mockToggleCat('finance')">📈 Capital Markets</button>
-    <span style="color:var(--muted);font-size:.72rem;padding:.2rem .2rem 0">Japanese:</span>
-    ${japLevels.map(c=>`<button class="study-cat-btn ${study.cats.includes(c)?'active':''}" onclick="mockToggleCat('${c}')">${CAT_META[c].emoji} ${CAT_META[c].label.replace('Japanese ','')}</button>`).join('')}
-    <button class="study-cat-btn ${study.cats.includes('trivia')?'active':''}" onclick="mockToggleCat('trivia')">🧠 General Trivia</button>`;
+  const catBtns = [
+    catBtn('finance','mockToggleCat',study.cats.includes('finance')),
+    japDropHTML('mockToggleJap'),
+    catBtn('trivia','mockToggleCat',study.cats.includes('trivia')),
+  ].join('');
   const countBtns = [...STUDY_COUNTS,'all'].map(n => {
     const label = n==='all' ? `All (${total})` : n;
     const handler = n==='all' ? `mockSetCount('all')` : `mockSetCount(${n})`;
