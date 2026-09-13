@@ -183,6 +183,28 @@ main{flex:1;padding:1.5rem 1rem;max-width:600px;margin:0 auto;width:100%}
 
 hr{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
 
+/* STUDY MODE */
+.study-mode-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:1.25rem;cursor:pointer;display:flex;align-items:flex-start;gap:1rem;
+  text-align:left;width:100%;transition:background .15s,border-color .15s;color:var(--text);
+}
+.study-mode-card:hover{background:var(--surface2);border-color:#4a5568}
+.study-mode-card .ico{font-size:1.75rem;flex-shrink:0;margin-top:.1rem}
+.study-cat-btn{
+  background:var(--surface2);border:1px solid var(--border);border-radius:999px;
+  color:var(--muted);cursor:pointer;font-size:.78rem;font-weight:600;padding:.35rem .85rem;
+  transition:background .15s,border-color .15s,color .15s;
+}
+.study-cat-btn.active{color:var(--text);border-color:var(--gold);background:rgba(245,158,11,.12)}
+.mock-count-btn{
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  color:var(--muted);cursor:pointer;font-size:.88rem;font-weight:500;padding:.55rem .75rem;
+  transition:background .15s,border-color .15s,color .15s;flex:1;
+}
+.mock-count-btn.active{color:var(--text);border-color:var(--gold);background:rgba(245,158,11,.12)}
+.mock-count-btn:disabled{opacity:.4;cursor:default}
+
 .freeze-note{font-size:.78rem;color:var(--muted);margin-top:.5rem;display:flex;align-items:center;gap:.3rem}
 .freeze-note.avail{color:#60a5fa}
 
@@ -209,6 +231,7 @@ hr{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
 <nav>
   <button class="active" id="tab-quest" onclick="switchTab('quest')">Today&#8217;s Quest</button>
   <button id="tab-stats" onclick="switchTab('stats')">My Stats</button>
+  <button id="tab-study" onclick="switchTab('study')">Study</button>
 </nav>
 <div class="install-bar" id="install-banner" hidden>
   &#128242; Add to Home Screen for daily reminders
@@ -219,6 +242,7 @@ hr{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
 <main>
   <div id="view-quest"></div>
   <div id="view-stats" hidden></div>
+  <div id="view-study" hidden></div>
 </main>
 
 <!-- Streak SOS modal -->
@@ -691,9 +715,19 @@ function daysSinceEpoch() {
 }
 
 // =================== QUESTION SELECTION ===================
+function seededShuffle(arr, seed) {
+  const a = [...arr];
+  let s = seed | 0;
+  for (let i = a.length - 1; i > 0; i--) {
+    s = (Math.imul(s, 1664525) + 1013904223) | 0;
+    const j = Math.abs(s) % (i + 1);
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 function todayQuestion(cat) {
-  const idx = daysSinceEpoch() % Q[cat].length;
-  return { ...Q[cat][idx], category: cat };
+  const shuffled = seededShuffle(Q[cat], ALL_CATS.indexOf(cat) * 999983);
+  return { ...shuffled[daysSinceEpoch() % shuffled.length], category: cat };
 }
 // Categories not yet answered today
 function pendingCats() { return ALL_CATS.filter(c => !S.todayAnswered.includes(c)); }
@@ -1109,16 +1143,233 @@ function confirmReset() {
 function switchTab(tab) {
   const qv = document.getElementById('view-quest');
   const sv = document.getElementById('view-stats');
+  const tv = document.getElementById('view-study');
   const tq = document.getElementById('tab-quest');
   const ts = document.getElementById('tab-stats');
-  if (tab === 'quest') {
-    qv.hidden = false; sv.hidden = true;
-    tq.classList.add('active'); ts.classList.remove('active');
-  } else {
-    qv.hidden = true; sv.hidden = false;
-    tq.classList.remove('active'); ts.classList.add('active');
-    renderStatsView();
-  }
+  const td = document.getElementById('tab-study');
+  qv.hidden = tab !== 'quest';
+  sv.hidden = tab !== 'stats';
+  tv.hidden = tab !== 'study';
+  tq.classList.toggle('active', tab === 'quest');
+  ts.classList.toggle('active', tab === 'stats');
+  td.classList.toggle('active', tab === 'study');
+  if (tab === 'stats') renderStatsView();
+  if (tab === 'study') renderStudyView();
+}
+
+// =================== STUDY ===================
+const STUDY_COUNTS = [5, 10, 20, 50];
+let study = { mode:'home', cats:['finance','japanese','trivia'], count:10, questions:[], idx:0, revealed:false, chosen:null, answers:[] };
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+function renderStudyView() {
+  const el = document.getElementById('view-study');
+  const m = study.mode;
+  el.innerHTML = m==='flashcard' ? flashcardHTML()
+    : m==='mock-setup' ? mockSetupHTML()
+    : m==='mock-play'  ? mockPlayHTML()
+    : m==='mock-results' ? mockResultsHTML()
+    : studyHomeHTML();
+}
+
+function studyHomeHTML() {
+  return `<div class="section-title" style="margin-bottom:1rem">Choose a Study Mode</div>
+    <div style="display:flex;flex-direction:column;gap:.6rem">
+      <button class="study-mode-card" onclick="startFlashcard()">
+        <div class="ico">&#128218;</div>
+        <div>
+          <div style="font-weight:600;font-size:.95rem">Flashcard Study</div>
+          <div style="color:var(--muted);font-size:.8rem;margin-top:.25rem">Browse questions and reveal answers at your own pace</div>
+        </div>
+      </button>
+      <button class="study-mode-card" onclick="startMockSetup()">
+        <div class="ico">&#128221;</div>
+        <div>
+          <div style="font-weight:600;font-size:.95rem">Mock Test</div>
+          <div style="color:var(--muted);font-size:.8rem;margin-top:.25rem">Answer questions and get a scored result at the end</div>
+        </div>
+      </button>
+    </div>`;
+}
+
+// --- FLASHCARD ---
+function startFlashcard() {
+  study.cats = ['finance','japanese','trivia'];
+  study.mode = 'flashcard';
+  rebuildFlashcardDeck();
+  renderStudyView();
+}
+function rebuildFlashcardDeck() {
+  study.questions = shuffle(study.cats.flatMap(c => Q[c].map(q => ({...q,category:c}))));
+  study.idx = 0; study.revealed = false;
+}
+function flashcardToggleCat(cat) {
+  if (study.cats.includes(cat)) { if (study.cats.length===1) return; study.cats=study.cats.filter(c=>c!==cat); }
+  else study.cats.push(cat);
+  rebuildFlashcardDeck(); renderStudyView();
+}
+function flashcardReveal() { study.revealed=true; renderStudyView(); }
+function flashcardNav(dir) {
+  study.idx = (study.idx+dir+study.questions.length) % study.questions.length;
+  study.revealed = false; renderStudyView();
+}
+function flashcardHTML() {
+  const q = study.questions[study.idx];
+  if (!q) return `<p style="color:var(--muted);text-align:center;padding:2rem">No questions available.</p>`;
+  const m = CAT_META[q.category];
+  const keys = q.type==='tf' ? ['T','F'] : ['A','B','C','D'];
+  const catBtns = ALL_CATS.map(c => {
+    const cm = CAT_META[c];
+    return `<button class="study-cat-btn ${study.cats.includes(c)?'active':''}" onclick="flashcardToggleCat('${c}')">${cm.emoji} ${cm.label}</button>`;
+  }).join('');
+  const optsHTML = study.revealed
+    ? `<button class="opt correct" disabled><span class="opt-key">${keys[q.answer]}</span>${q.options[q.answer]}</button>`
+    : '';
+  return `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+      <button class="btn" onclick="study.mode='home';renderStudyView()">&#8592; Back</button>
+      <span style="color:var(--muted);font-size:.8rem">${study.idx+1} / ${study.questions.length}</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem">${catBtns}</div>
+    <div class="card" style="border-color:${m.color}44">
+      <span class="cat-badge" style="background:${m.dim};color:${m.color}">${m.emoji} ${m.label}</span>
+      <div class="question">${q.q}</div>
+      ${study.revealed
+        ? `<div class="options">${optsHTML}</div><div class="explain"><strong>&#128161;</strong> ${q.explanation}</div>`
+        : `<button class="btn btn-primary" style="width:100%;margin-top:.5rem" onclick="flashcardReveal()">Show Answer</button>`}
+    </div>
+    <div style="display:flex;gap:.5rem;margin-top:.25rem">
+      <button class="btn" style="flex:1" onclick="flashcardNav(-1)">&#8592; Prev</button>
+      <button class="btn" style="flex:1" onclick="flashcardNav(1)">Next &#8594;</button>
+    </div>`;
+}
+
+// --- MOCK TEST ---
+function startMockSetup() {
+  study.mode='mock-setup'; study.cats=['finance','japanese','trivia']; study.count=10;
+  renderStudyView();
+}
+function mockToggleCat(cat) {
+  if (study.cats.includes(cat)) { if (study.cats.length===1) return; study.cats=study.cats.filter(c=>c!==cat); }
+  else study.cats.push(cat);
+  renderStudyView();
+}
+function mockSetCount(n) { study.count=n; renderStudyView(); }
+function startMockPlay() {
+  const pool = shuffle(study.cats.flatMap(c => Q[c].map(q => ({...q,category:c}))));
+  study.questions = study.count==='all' ? pool : pool.slice(0,study.count);
+  study.idx=0; study.chosen=null; study.answers=[]; study.mode='mock-play';
+  renderStudyView();
+}
+function mockSetupHTML() {
+  const total = study.cats.reduce((s,c)=>s+Q[c].length,0);
+  const catBtns = ALL_CATS.map(c => {
+    const m = CAT_META[c];
+    return `<button class="study-cat-btn ${study.cats.includes(c)?'active':''}" onclick="mockToggleCat('${c}')">${m.emoji} ${m.label}</button>`;
+  }).join('');
+  const countBtns = [...STUDY_COUNTS,'all'].map(n => {
+    const label = n==='all' ? `All (${total})` : n;
+    const handler = n==='all' ? `mockSetCount('all')` : `mockSetCount(${n})`;
+    const active = study.count===n;
+    const disabled = typeof n==='number' && n>total;
+    return `<button class="mock-count-btn ${active?'active':''}" ${disabled?'disabled':''} onclick="${handler}">${label}</button>`;
+  }).join('');
+  return `<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem">
+      <button class="btn" onclick="study.mode='home';renderStudyView()">&#8592; Back</button>
+      <span style="font-weight:600">Mock Test Setup</span>
+    </div>
+    <div class="section">
+      <div class="section-title">Categories</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem">${catBtns}</div>
+    </div>
+    <div class="section">
+      <div class="section-title">Number of Questions</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem">${countBtns}</div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:.5rem" onclick="startMockPlay()">Start Test &#8594;</button>`;
+}
+function mockAnswerQ(chosen) {
+  const q = study.questions[study.idx];
+  study.answers.push({q,chosen,correct:chosen===q.answer});
+  study.chosen=chosen; renderStudyView();
+}
+function mockNext() {
+  study.idx++; study.chosen=null;
+  study.mode = study.idx>=study.questions.length ? 'mock-results' : 'mock-play';
+  renderStudyView();
+}
+function mockPlayHTML() {
+  const q = study.questions[study.idx];
+  const total = study.questions.length;
+  const locked = study.chosen!==null;
+  const m = CAT_META[q.category];
+  const keys = q.type==='tf' ? ['T','F'] : ['A','B','C','D'];
+  const pct = Math.round((study.idx/total)*100);
+  const optsHTML = q.options.map((opt,i) => {
+    let cls='opt', handler='';
+    if (locked) { if (i===q.answer) cls+=' correct'; else if (i===study.chosen) cls+=' wrong'; }
+    else handler=`onclick="mockAnswerQ(${i})"`;
+    return `<button class="${cls}" ${locked?'disabled':''} ${handler}><span class="opt-key">${keys[i]}</span>${opt}</button>`;
+  }).join('');
+  const correctSoFar = study.answers.filter(a=>a.correct).length;
+  return `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem">
+      <span style="color:var(--muted);font-size:.8rem">Question ${study.idx+1} of ${total}</span>
+      <span style="color:var(--muted);font-size:.8rem">&#10003; ${correctSoFar} correct</span>
+    </div>
+    <div class="prog-track" style="margin-bottom:.75rem"><div class="prog-fill" style="width:${pct}%"></div></div>
+    ${locked ? `<div class="result ${study.chosen===q.answer?'correct':'wrong'}">${study.chosen===q.answer?'&#10003; Correct!':'&#10007; Incorrect'}</div>` : ''}
+    <div class="card" style="border-color:${m.color}44">
+      <span class="cat-badge" style="background:${m.dim};color:${m.color}">${m.emoji} ${m.label}</span>
+      <div class="question">${q.q}</div>
+      <div class="options">${optsHTML}</div>
+      ${locked ? `<div class="explain"><strong>&#128161;</strong> ${q.explanation}</div>` : ''}
+    </div>
+    ${locked ? `<button class="btn btn-primary" style="width:100%;margin-top:.25rem" onclick="mockNext()">${study.idx+1<total?'Next Question &#8594;':'See Results &#8594;'}</button>` : ''}`;
+}
+function mockResultsHTML() {
+  const total = study.questions.length;
+  const correct = study.answers.filter(a=>a.correct).length;
+  const pct = Math.round(correct/total*100);
+  const emoji = pct===100?'&#127942;':pct>=80?'&#127919;':pct>=60?'&#128077;':'&#128218;';
+  const catStats = ALL_CATS.filter(c=>study.cats.includes(c)).map(c => {
+    const ca = study.answers.filter(a=>a.q.category===c);
+    const cc = ca.filter(a=>a.correct).length;
+    const m = CAT_META[c];
+    if (!ca.length) return '';
+    return `<div class="stat-card" style="border-color:${m.color}44">
+      <div class="val">${m.emoji} ${Math.round(cc/ca.length*100)}%</div>
+      <div class="lbl">${m.label} (${cc}/${ca.length})</div>
+    </div>`;
+  }).join('');
+  const missed = study.answers.filter(a=>!a.correct);
+  const missedHTML = missed.map(({q,chosen}) => {
+    const m = CAT_META[q.category];
+    const keys = q.type==='tf'?['T','F']:['A','B','C','D'];
+    return `<div class="card" style="border-color:${m.color}44;margin-bottom:.75rem">
+      <span class="cat-badge" style="background:${m.dim};color:${m.color}">${m.emoji} ${m.label}</span>
+      <div class="question" style="font-size:.9rem">${q.q}</div>
+      <div class="options" style="margin-top:.5rem">
+        ${q.options.map((opt,i)=>`<button class="opt${i===q.answer?' correct':i===chosen?' wrong':''}" disabled><span class="opt-key">${keys[i]}</span>${opt}</button>`).join('')}
+      </div>
+      <div class="explain"><strong>&#128161;</strong> ${q.explanation}</div>
+    </div>`;
+  }).join('');
+  return `<div class="rest" style="padding:1.5rem 0 1rem">
+      <div class="ico">${emoji}</div>
+      <h1 style="font-size:2rem;margin-bottom:.25rem">${correct} / ${total}</h1>
+      <p style="font-size:1.1rem;color:${pct>=80?'var(--correct)':pct>=60?'var(--gold)':'var(--wrong)'};font-weight:700">${pct}%</p>
+      <p style="margin-top:.5rem">Mock test complete</p>
+    </div>
+    ${catStats ? `<div class="stat-grid section" style="margin-bottom:1rem">${catStats}</div>` : ''}
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
+      <button class="btn btn-primary" onclick="startMockSetup()" style="flex:1">Try Again</button>
+      <button class="btn" onclick="study.mode='home';renderStudyView()" style="flex:1">&#8592; Study Home</button>
+    </div>
+    ${missed.length ? `<div class="section-title" style="margin-bottom:.75rem">Missed Questions</div>${missedHTML}` : ''}`
 }
 
 // =================== INIT ===================
