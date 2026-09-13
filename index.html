@@ -715,7 +715,7 @@ const BADGE_DEFS  = [
   { id:'centurion',       emoji:'💯', name:'Centurion',       check:(s)    => s.streak >= 100 },
   { id:'sharp',           emoji:'🎯', name:'Sharp',           check:(s)    => s.correctCount >= 10 },
   { id:'sharpshooter',    emoji:'🏹', name:'Sharpshooter',    check:(s)    => s.correctCount >= 50 },
-  { id:'perfect_day',     emoji:'⭐', name:'Perfect Day',     check:(s)    => s.todayCorrect && s.todayCorrect.length === ALL_CATS.length },
+  { id:'perfect_day',     emoji:'⭐', name:'Perfect Day',     check:(s)    => s.todayCorrect && s.todayCorrect.includes('finance') && s.todayCorrect.includes('trivia') && ['japanese_n5','japanese_n4','japanese_n3'].some(c=>s.todayCorrect.includes(c)) },
   { id:'perfect_week',    emoji:'🌟', name:'Perfect Week',    check:(s)    => s.perfectDays >= 5 },
   { id:'point_hunter',    emoji:'💰', name:'Point Hunter',    check:(s)    => s.totalPoints >= 100 },
   { id:'high_scorer',     emoji:'👑', name:'High Scorer',     check:(s)    => s.totalPoints >= 500 },
@@ -739,7 +739,7 @@ const DEFAULTS = {
   dayHistory:{},
   perfectDays:0,
   badges:[], freezeWeek:null, freezeAvailable:1, freezeUsedDate:null,
-  todayAnswered:[], todayCorrect:[],   // reset each new day
+  todayAnswered:[], todayCorrect:[], todayPerfect:false,
 };
 let S = {};
 let Q = {};
@@ -752,7 +752,7 @@ function loadState() {
   try { S = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(STORE_KEY) || '{}') }; }
   catch { S = { ...DEFAULTS }; }
   // Reset today's progress when it's a new calendar day
-  if (S.lastAnswerDate !== dStr()) { S.todayAnswered = []; S.todayCorrect = []; }
+  if (S.lastAnswerDate !== dStr()) { S.todayAnswered = []; S.todayCorrect = []; S.todayPerfect = false; }
 }
 function saveState() { localStorage.setItem(STORE_KEY, JSON.stringify(S)); }
 
@@ -874,8 +874,10 @@ function submitAnswer(q, chosen) {
   }
 
   // Perfect-day bonus fires exactly when all 3 become correct
-  const justPerfect = S.todayCorrect.length === ALL_CATS.length && S.todayAnswered.length === ALL_CATS.length;
-  if (justPerfect) { S.totalPoints += PERFECT_BONUS; S.perfectDays++; }
+  const justPerfect = !S.todayPerfect &&
+    S.todayCorrect.includes('finance') && S.todayCorrect.includes('trivia') &&
+    ['japanese_n5','japanese_n4','japanese_n3'].some(c => S.todayCorrect.includes(c));
+  if (justPerfect) { S.totalPoints += PERFECT_BONUS; S.perfectDays++; S.todayPerfect = true; }
 
   // Update activity calendar
   if (!S.dayHistory) S.dayHistory = {};
@@ -1300,10 +1302,12 @@ function flashcardHTML() {
   if (!q) return `<p style="color:var(--muted);text-align:center;padding:2rem">No questions available.</p>`;
   const m = CAT_META[q.category];
   const keys = q.type==='tf' ? ['T','F'] : ['A','B','C','D'];
-  const catBtns = ALL_CATS.map(c => {
-    const cm = CAT_META[c];
-    return `<button class="study-cat-btn ${study.cats.includes(c)?'active':''}" onclick="flashcardToggleCat('${c}')">${cm.emoji} ${cm.label}</button>`;
-  }).join('');
+  const japLevels = ['japanese_n5','japanese_n4','japanese_n3'];
+  const catBtns = `
+    <button class="study-cat-btn ${study.cats.includes('finance')?'active':''}" onclick="flashcardToggleCat('finance')">📈 Capital Markets</button>
+    <span style="color:var(--muted);font-size:.72rem;padding:.2rem .2rem 0">Japanese:</span>
+    ${japLevels.map(c=>`<button class="study-cat-btn ${study.cats.includes(c)?'active':''}" onclick="flashcardToggleCat('${c}')">${CAT_META[c].emoji} ${CAT_META[c].label.replace('Japanese ','')}</button>`).join('')}
+    <button class="study-cat-btn ${study.cats.includes('trivia')?'active':''}" onclick="flashcardToggleCat('trivia')">🧠 General Trivia</button>`;
   const optsHTML = study.revealed
     ? `<button class="opt correct" disabled><span class="opt-key">${keys[q.answer]}</span>${q.options[q.answer]}</button>`
     : '';
@@ -1344,10 +1348,12 @@ function startMockPlay() {
 }
 function mockSetupHTML() {
   const total = study.cats.reduce((s,c)=>s+Q[c].length,0);
-  const catBtns = ALL_CATS.map(c => {
-    const m = CAT_META[c];
-    return `<button class="study-cat-btn ${study.cats.includes(c)?'active':''}" onclick="mockToggleCat('${c}')">${m.emoji} ${m.label}</button>`;
-  }).join('');
+  const japLevels = ['japanese_n5','japanese_n4','japanese_n3'];
+  const catBtns = `
+    <button class="study-cat-btn ${study.cats.includes('finance')?'active':''}" onclick="mockToggleCat('finance')">📈 Capital Markets</button>
+    <span style="color:var(--muted);font-size:.72rem;padding:.2rem .2rem 0">Japanese:</span>
+    ${japLevels.map(c=>`<button class="study-cat-btn ${study.cats.includes(c)?'active':''}" onclick="mockToggleCat('${c}')">${CAT_META[c].emoji} ${CAT_META[c].label.replace('Japanese ','')}</button>`).join('')}
+    <button class="study-cat-btn ${study.cats.includes('trivia')?'active':''}" onclick="mockToggleCat('trivia')">🧠 General Trivia</button>`;
   const countBtns = [...STUDY_COUNTS,'all'].map(n => {
     const label = n==='all' ? `All (${total})` : n;
     const handler = n==='all' ? `mockSetCount('all')` : `mockSetCount(${n})`;
