@@ -1534,13 +1534,13 @@ function renderQuestView() {
 
   const remaining = pendingCats();
 
-  // All 3 done today
+  // All 3 categories done today
   if (remaining.length === 0) {
     const perfect = S.todayCorrect.length === 3;
     el.innerHTML = `${statsBar(null)}${dailyProgress()}
       <div class="rest">
         <div class="ico">${perfect ? '&#127942;' : '&#9989;'}</div>
-        <h1>${perfect ? 'Perfect Day!' : 'All 3 done!'}</h1>
+        <h1>${perfect ? 'Perfect Day!' : 'All 3 categories done!'}</h1>
         <p>${perfect ? 'You aced every question and earned +10 bonus pts! &#127881;' : 'Come back tomorrow for 3 more questions.'}</p>
         <div style="display:flex;gap:.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap">
           <button class="btn btn-primary" onclick="switchTab('stats')">View My Stats &#8594;</button>
@@ -1551,27 +1551,55 @@ function renderQuestView() {
   }
 
   // Category selection lobby
-  const catCards = ALL_CATS.map(c => {
+  const japLevels = ['japanese_n5','japanese_n4','japanese_n3'];
+  const anyJapDone = japLevels.some(c => S.todayAnswered.includes(c));
+  const catCards = [];
+  ALL_CATS.forEach(c => {
     const m    = CAT_META[c];
     const done = S.todayAnswered.includes(c);
     const ok   = S.todayCorrect.includes(c);
+    const isJap = japLevels.includes(c);
+    const isOptionalJap = isJap && anyJapDone && !done;
+
+    if (c === 'japanese_n5') {
+      const reqColor = anyJapDone ? '#4ade80' : '#F43F5E';
+      const reqText  = anyJapDone ? '1 required &#10003;' : '1 required';
+      catCards.push(`<div style="display:flex;align-items:center;gap:.5rem;margin-top:.4rem;margin-bottom:-.1rem">
+        <span style="color:#9ca3af;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em">Japanese</span>
+        <span style="color:${reqColor};font-size:.68rem;border:1px solid ${reqColor}55;border-radius:4px;padding:.05rem .3rem">${reqText}</span>
+        ${anyJapDone ? '' : '<span style="color:#9ca3af;font-size:.72rem">&#8212; others optional</span>'}
+      </div>`);
+    }
+
     if (done) {
-      return `<div style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;border:1px solid ${ok?'#16a34a44':'#6b728044'};border-radius:12px;background:${ok?'#16a34a11':'#6b728011'};color:${ok?'#4ade80':'#6b7280'}">
+      catCards.push(`<div style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;border:1px solid ${ok?'#16a34a44':'#6b728044'};border-radius:12px;background:${ok?'#16a34a11':'#6b728011'};color:${ok?'#4ade80':'#6b7280'}">
         <span style="font-size:1.4rem">${ok ? '&#10003;' : '&#10007;'}</span>
         <span style="font-size:1rem">${m.emoji} ${m.label}</span>
         <span style="margin-left:auto;font-size:.75rem">${ok ? 'Correct' : 'Answered'}</span>
-      </div>`;
+      </div>`);
+      return;
     }
-    return `<button onclick="showQuestion('${c}')" style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;border:1px solid ${m.color}55;border-radius:12px;background:${m.dim};color:#f1f5f9;cursor:pointer;text-align:left;font-size:1rem;width:100%">
+
+    if (isOptionalJap) {
+      catCards.push(`<button onclick="showQuestion('${c}')" style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;border:1px solid ${m.color}33;border-radius:12px;background:${m.dim};color:#9ca3af;cursor:pointer;text-align:left;font-size:1rem;width:100%;opacity:.8">
+        <span style="font-size:1.4rem">${m.emoji}</span>
+        <span style="flex:1">${m.label}</span>
+        <span style="color:#6b7280;font-size:.68rem;border:1px solid #374151;border-radius:4px;padding:.1rem .35rem;margin-right:.25rem">Optional</span>
+        <span style="color:${m.color};font-size:.8rem">Tap &#8594;</span>
+      </button>`);
+      return;
+    }
+
+    catCards.push(`<button onclick="showQuestion('${c}')" style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;border:1px solid ${m.color}55;border-radius:12px;background:${m.dim};color:#f1f5f9;cursor:pointer;text-align:left;font-size:1rem;width:100%">
       <span style="font-size:1.4rem">${m.emoji}</span>
       <span>${m.label}</span>
       <span style="margin-left:auto;color:${m.color};font-size:.8rem">Tap to answer &#8594;</span>
-    </button>`;
-  }).join('');
+    </button>`);
+  });
 
   el.innerHTML = `${statsBar(null)}${dailyProgress()}
-    <p style="color:#9ca3af;font-size:.85rem;margin:.25rem 0 .75rem">Pick any category to answer:</p>
-    <div style="display:flex;flex-direction:column;gap:.5rem">${catCards}</div>`;
+    <p style="color:#9ca3af;font-size:.85rem;margin:.25rem 0 .75rem">Pick a category to answer:</p>
+    <div style="display:flex;flex-direction:column;gap:.5rem">${catCards.join('')}</div>`;
 
   if (pendingSOS) {
     document.getElementById('sos-msg').textContent =
@@ -1602,14 +1630,15 @@ function renderResult(q, chosenIdx, correct, justPerfect) {
 
   const actions = remaining.length > 0
     ? `<button class="btn btn-primary" onclick="renderQuestView()">${remaining.length} question${remaining.length>1?'s':''} left &#8212; choose next &#8594;</button>`
-    : `<div style="display:flex;gap:.5rem;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="switchTab('stats')">View My Stats &#8594;</button>
-        <button class="btn" onclick="copyScore()">&#128203; Share</button>
-       </div>`;
+    : `<p style="text-align:center;color:#9ca3af;font-size:.85rem;margin-top:.75rem">All done &#8212; taking you to results&#8230;</p>`;
 
   el.innerHTML = `${statsBar(q)}${dailyProgress()}${banner}
     ${catCard(q, true, chosenIdx, `<div class="explain"><strong>&#128161;</strong> ${q.explanation}</div>`)}
     ${actions}`;
+
+  if (remaining.length === 0) {
+    setTimeout(() => renderQuestView(), 1800);
+  }
 }
 
 function renderStatsView() {
