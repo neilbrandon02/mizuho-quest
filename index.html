@@ -1561,13 +1561,25 @@ function renderQuestView() {
     const isJap = japLevels.includes(c);
     const isOptionalJap = isJap && anyJapDone && !done;
 
+    if (c === 'finance') {
+      catCards.push(`<div style="display:flex;align-items:center;gap:.5rem;margin-top:.4rem;margin-bottom:-.1rem">
+        <span style="color:#9ca3af;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em">Finance</span>
+      </div>`);
+    }
+
     if (c === 'japanese_n5') {
       const reqColor = anyJapDone ? '#4ade80' : '#F43F5E';
       const reqText  = anyJapDone ? '1 required &#10003;' : '1 required';
-      catCards.push(`<div style="display:flex;align-items:center;gap:.5rem;margin-top:.4rem;margin-bottom:-.1rem">
+      catCards.push(`<div style="display:flex;align-items:center;gap:.5rem;margin-top:.75rem;margin-bottom:-.1rem">
         <span style="color:#9ca3af;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em">Japanese</span>
         <span style="color:${reqColor};font-size:.68rem;border:1px solid ${reqColor}55;border-radius:4px;padding:.05rem .3rem">${reqText}</span>
         ${anyJapDone ? '' : '<span style="color:#9ca3af;font-size:.72rem">&#8212; others optional</span>'}
+      </div>`);
+    }
+
+    if (c === 'trivia') {
+      catCards.push(`<div style="display:flex;align-items:center;gap:.5rem;margin-top:.75rem;margin-bottom:-.1rem">
+        <span style="color:#9ca3af;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em">Trivia</span>
       </div>`);
     }
 
