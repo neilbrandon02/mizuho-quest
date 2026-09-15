@@ -1629,7 +1629,7 @@ function showQuestion(cat) {
   const freezeNote = S.freezeAvailable
     ? `<div class="freeze-note avail">&#10052;&#65039; Weekly freeze available</div>`
     : `<div class="freeze-note">&#10052;&#65039; Freeze used this week</div>`;
-  el.innerHTML = `${statsBar(q)}${dailyProgress()}${catCard(q, false, null, '')}${freezeNote}`;
+  el.innerHTML = `${statsBar(q)}${dailyProgress()}<button class="btn" onclick="renderQuestView()" style="margin-bottom:.75rem;font-size:.8rem;padding:.35rem .75rem">&#8592; Back to categories</button>${catCard(q, false, null, '')}${freezeNote}`;
 }
 
 function renderResult(q, chosenIdx, correct, justPerfect) {
