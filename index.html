@@ -1466,7 +1466,7 @@ function submitAnswer(q, chosen) {
 }
 
 // =================== RENDERING ===================
-function dailyProgress() {
+function dailyProgress(activeCat) {
   const pending = pendingCats();
   return `<div style="display:flex;gap:.5rem;margin-bottom:1rem">
     ${ALL_CATS.map(c => {
@@ -1474,12 +1474,27 @@ function dailyProgress() {
       const done    = S.todayAnswered.includes(c);
       const correct = S.todayCorrect.includes(c);
       const isPending = !done && pending.includes(c);
+      const isActive  = c === activeCat;
       const bg     = done ? (correct ? '#16a34a22' : '#6b728022') : (isPending ? m.dim : '#1f293744');
-      const border = done ? (correct ? '#16a34a88' : '#6b728088') : (isPending ? m.color : '#37415188');
-      const ico    = done ? (correct ? '&#10003;' : '&#10007;') : m.emoji;
-      const col    = done ? (correct ? '#4ade80' : '#9ca3af') : (isPending ? m.color : '#6b7280');
-      return `<div style="flex:1;padding:.45rem .3rem;border:1px solid ${border};border-radius:8px;background:${bg};text-align:center;font-size:.7rem;color:${col}">
-        <div style="font-size:1.05rem;margin-bottom:.15rem">${ico}</div>
+      const border = done ? (correct ? '#16a34a88' : '#6b728088') : (isActive ? m.color : isPending ? m.color+'88' : '#37415188');
+      const col    = done ? (correct ? '#4ade80' : '#9ca3af') : (isPending || isActive ? m.color : '#6b7280');
+
+      if (done) {
+        return `<div style="flex:1;padding:.45rem .3rem;border:2px solid ${border};border-radius:8px;background:${bg};text-align:center;font-size:.7rem;color:${col}">
+          <div style="font-size:1.2rem;margin-bottom:.1rem;font-weight:700">${correct ? '&#10003;' : '&#10007;'}</div>
+          <div style="font-size:.6rem;opacity:.8">${correct ? 'Correct' : 'Wrong'}</div>
+        </div>`;
+      }
+
+      if (isPending) {
+        return `<button onclick="showQuestion('${c}')" style="flex:1;padding:.45rem .3rem;border:1px solid ${border};border-radius:8px;background:${bg};text-align:center;font-size:.7rem;color:${col};cursor:pointer;transition:filter .15s" onmouseover="this.style.filter='brightness(1.25)'" onmouseout="this.style.filter=''">
+          <div style="font-size:1.05rem;margin-bottom:.15rem">${m.emoji}</div>
+          <div>${m.label}</div>
+        </button>`;
+      }
+
+      return `<div style="flex:1;padding:.45rem .3rem;border:2px solid ${border};border-radius:8px;background:${bg};text-align:center;font-size:.7rem;color:${col};opacity:.7">
+        <div style="font-size:1.05rem;margin-bottom:.15rem">${m.emoji}</div>
         <div>${m.label}</div>
       </div>`;
     }).join('')}
@@ -1629,7 +1644,7 @@ function showQuestion(cat) {
   const freezeNote = S.freezeAvailable
     ? `<div class="freeze-note avail">&#10052;&#65039; Weekly freeze available</div>`
     : `<div class="freeze-note">&#10052;&#65039; Freeze used this week</div>`;
-  el.innerHTML = `${statsBar(q)}${dailyProgress()}<button class="btn" onclick="renderQuestView()" style="margin-bottom:.75rem;font-size:.8rem;padding:.35rem .75rem">&#8592; Back to categories</button>${catCard(q, false, null, '')}${freezeNote}`;
+  el.innerHTML = `${statsBar(q)}${dailyProgress(q.category)}<button class="btn" onclick="renderQuestView()" style="margin-bottom:.75rem;font-size:.8rem;padding:.35rem .75rem">&#8592; Back to categories</button>${catCard(q, false, null, '')}${freezeNote}`;
 }
 
 function renderResult(q, chosenIdx, correct, justPerfect) {
