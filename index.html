@@ -1314,7 +1314,7 @@ const DEFAULTS = {
   dayHistory:{},
   perfectDays:0,
   badges:[], freezeWeek:null, freezeAvailable:1, freezeUsedDate:null,
-  todayAnswered:[], todayCorrect:[], todayPerfect:false,
+  todayAnswered:[], todayCorrect:[], todayPerfect:false, todayChoices:{},
 };
 let S = {};
 let Q = {};
@@ -1327,7 +1327,7 @@ function loadState() {
   try { S = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(STORE_KEY) || '{}') }; }
   catch { S = { ...DEFAULTS }; }
   // Reset today's progress when it's a new calendar day
-  if (S.lastAnswerDate !== dStr()) { S.todayAnswered = []; S.todayCorrect = []; S.todayPerfect = false; }
+  if (S.lastAnswerDate !== dStr()) { S.todayAnswered = []; S.todayCorrect = []; S.todayPerfect = false; S.todayChoices = {}; }
 }
 function saveState() { localStorage.setItem(STORE_KEY, JSON.stringify(S)); }
 
@@ -1441,6 +1441,8 @@ function submitAnswer(q, chosen) {
   // Track today's category results
   if (!S.todayAnswered.includes(cat)) S.todayAnswered.push(cat);
   if (correct && !S.todayCorrect.includes(cat)) S.todayCorrect.push(cat);
+  if (!S.todayChoices) S.todayChoices = {};
+  S.todayChoices[cat] = chosen;
 
   // Streak increments only on the FIRST answer of the day
   if (S.lastAnswerDate !== today) {
@@ -1480,10 +1482,10 @@ function dailyProgress(activeCat) {
       const col    = done ? (correct ? '#4ade80' : '#9ca3af') : (isPending || isActive ? m.color : '#6b7280');
 
       if (done) {
-        return `<div style="flex:1;padding:.45rem .3rem;border:2px solid ${border};border-radius:8px;background:${bg};text-align:center;font-size:.7rem;color:${col}">
+        return `<button onclick="renderTodayReview()" style="flex:1;padding:.45rem .3rem;border:2px solid ${border};border-radius:8px;background:${bg};text-align:center;font-size:.7rem;color:${col};cursor:pointer;transition:filter .15s" onmouseover="this.style.filter='brightness(1.25)'" onmouseout="this.style.filter=''">
           <div style="font-size:1.2rem;margin-bottom:.1rem;font-weight:700">${correct ? '&#10003;' : '&#10007;'}</div>
           <div style="font-size:.6rem;opacity:.8">${correct ? 'Correct' : 'Wrong'}</div>
-        </div>`;
+        </button>`;
       }
 
       if (isPending) {
@@ -1562,6 +1564,7 @@ function renderQuestView() {
         <div style="display:flex;gap:.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap">
           <button class="btn btn-primary" onclick="switchTab('stats')">View My Stats &#8594;</button>
           <button class="btn" onclick="copyScore()">&#128203; Share</button>
+          <button class="btn" onclick="renderTodayReview()">&#128065;&#65039; Review Today&#8217;s Questions</button>
         </div>
       </div>`;
     return;
@@ -1601,11 +1604,11 @@ function renderQuestView() {
     }
 
     if (done) {
-      catCards.push(`<div style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;border:1px solid ${ok?'#16a34a44':'#6b728044'};border-radius:12px;background:${ok?'#16a34a11':'#6b728011'};color:${ok?'#4ade80':'#6b7280'}">
+      catCards.push(`<button onclick="renderTodayReview()" style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;border:1px solid ${ok?'#16a34a44':'#6b728044'};border-radius:12px;background:${ok?'#16a34a11':'#6b728011'};color:${ok?'#4ade80':'#6b7280'};cursor:pointer;text-align:left;font-size:1rem;width:100%">
         <span style="font-size:1.4rem">${ok ? '&#10003;' : '&#10007;'}</span>
         <span style="font-size:1rem">${m.emoji} ${m.label}</span>
-        <span style="margin-left:auto;font-size:.75rem">${ok ? 'Correct' : 'Answered'}</span>
-      </div>`);
+        <span style="margin-left:auto;font-size:.75rem">${ok ? 'Correct' : 'Answered'} &#8212; Review</span>
+      </button>`);
       return;
     }
 
@@ -1668,6 +1671,22 @@ function renderResult(q, chosenIdx, correct, justPerfect) {
   if (remaining.length === 0) {
     setTimeout(() => renderQuestView(), 1800);
   }
+}
+
+function renderTodayReview() {
+  const el = document.getElementById('view-quest');
+  const answered = S.todayAnswered;
+  if (answered.length === 0) { renderQuestView(); return; }
+  const choices = S.todayChoices || {};
+  const cards = answered.map(cat => {
+    const q = todayQuestion(cat);
+    const chosenIdx = choices[cat] != null ? choices[cat] : null;
+    return catCard(q, true, chosenIdx, `<div class="explain"><strong>&#128161;</strong> ${q.explanation}</div>`);
+  });
+  el.innerHTML = `${statsBar(null)}${dailyProgress()}
+    <button class="btn" onclick="renderQuestView()" style="margin-bottom:.75rem;font-size:.8rem;padding:.35rem .75rem">&#8592; Back</button>
+    <h2 style="color:#f1f5f9;font-size:1rem;margin:.25rem 0 .75rem">Today&#8217;s Questions</h2>
+    <div style="display:flex;flex-direction:column;gap:1rem">${cards.join('')}</div>`;
 }
 
 function renderStatsView() {
