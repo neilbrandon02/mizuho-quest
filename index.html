@@ -1482,7 +1482,7 @@ function dailyProgress(activeCat) {
       const col    = done ? (correct ? '#4ade80' : '#9ca3af') : (isPending || isActive ? m.color : '#6b7280');
 
       if (done) {
-        return `<button onclick="renderTodayReview()" style="flex:1;padding:.45rem .3rem;border:2px solid ${border};border-radius:8px;background:${bg};text-align:center;font-size:.7rem;color:${col};cursor:pointer;transition:filter .15s" onmouseover="this.style.filter='brightness(1.25)'" onmouseout="this.style.filter=''">
+        return `<button onclick="reviewCategory('${c}')" style="flex:1;padding:.45rem .3rem;border:2px solid ${border};border-radius:8px;background:${bg};text-align:center;font-size:.7rem;color:${col};cursor:pointer;transition:filter .15s" onmouseover="this.style.filter='brightness(1.25)'" onmouseout="this.style.filter=''">
           <div style="font-size:1.2rem;margin-bottom:.1rem;font-weight:700">${correct ? '&#10003;' : '&#10007;'}</div>
           <div style="font-size:.6rem;opacity:.8">${correct ? 'Correct' : 'Wrong'}</div>
         </button>`;
@@ -1604,7 +1604,7 @@ function renderQuestView() {
     }
 
     if (done) {
-      catCards.push(`<button onclick="renderTodayReview()" style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;border:1px solid ${ok?'#16a34a44':'#6b728044'};border-radius:12px;background:${ok?'#16a34a11':'#6b728011'};color:${ok?'#4ade80':'#6b7280'};cursor:pointer;text-align:left;font-size:1rem;width:100%">
+      catCards.push(`<button onclick="reviewCategory('${c}')" style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;border:1px solid ${ok?'#16a34a44':'#6b728044'};border-radius:12px;background:${ok?'#16a34a11':'#6b728011'};color:${ok?'#4ade80':'#6b7280'};cursor:pointer;text-align:left;font-size:1rem;width:100%">
         <span style="font-size:1.4rem">${ok ? '&#10003;' : '&#10007;'}</span>
         <span style="font-size:1rem">${m.emoji} ${m.label}</span>
         <span style="margin-left:auto;font-size:.75rem">${ok ? 'Correct' : 'Answered'} &#8212; Review</span>
@@ -1671,6 +1671,20 @@ function renderResult(q, chosenIdx, correct, justPerfect) {
   if (remaining.length === 0) {
     setTimeout(() => renderQuestView(), 1800);
   }
+}
+
+function reviewCategory(cat) {
+  const el = document.getElementById('view-quest');
+  const q = todayQuestion(cat);
+  const chosenIdx = (S.todayChoices || {})[cat] != null ? S.todayChoices[cat] : null;
+  const correct = S.todayCorrect.includes(cat);
+  const banner = correct
+    ? `<div class="result correct">&#10003; Correct! +10 pts</div>`
+    : `<div class="result wrong">&#10007; Not quite &#8212; streak still alive, no points this time.</div>`;
+  el.innerHTML = `${statsBar(null)}${dailyProgress()}
+    <button class="btn" onclick="renderQuestView()" style="margin-bottom:.75rem;font-size:.8rem;padding:.35rem .75rem">&#8592; Back</button>
+    ${banner}
+    ${catCard(q, true, chosenIdx, `<div class="explain"><strong>&#128161;</strong> ${q.explanation}</div>`)}`;
 }
 
 function renderTodayReview() {
