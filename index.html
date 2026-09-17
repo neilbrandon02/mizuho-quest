@@ -141,8 +141,9 @@ main{flex:1;padding:1.5rem 1rem;max-width:600px;margin:0 auto;width:100%}
 .badge{
   background:var(--surface);border:1px solid var(--border);border-radius:8px;
   padding:.55rem .7rem;text-align:center;min-width:76px;
-  transition:opacity .2s;
+  transition:opacity .2s;cursor:pointer;
 }
+.badge:hover{border-color:var(--gold);opacity:1!important;filter:none!important}
 .badge.earned{border-color:var(--gold);background:rgba(245,158,11,.08)}
 .badge:not(.earned){opacity:.35;filter:grayscale(1)}
 .badge-ico{font-size:1.4rem;display:block}
@@ -270,6 +271,20 @@ hr{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
     <div class="modal-actions">
       <button class="btn" onclick="declineFreeze()">Let it reset</button>
       <button class="btn btn-primary" onclick="useFreeze()">Use freeze &#10052;&#65039;</button>
+    </div>
+  </div>
+</div>
+
+<!-- Badge detail modal -->
+<div class="backdrop" id="modal-badge" hidden onclick="if(event.target===this)closeBadgeModal()">
+  <div class="modal" style="text-align:center">
+    <div style="font-size:2.8rem;margin-bottom:.4rem" id="badge-modal-ico"></div>
+    <div style="font-weight:700;font-size:1.05rem;margin-bottom:.25rem" id="badge-modal-name"></div>
+    <div style="font-size:.75rem;margin-bottom:1rem" id="badge-modal-status"></div>
+    <p style="font-size:.86rem;color:var(--muted);line-height:1.5;margin-bottom:.75rem" id="badge-modal-hint"></p>
+    <div style="font-size:.8rem;color:var(--muted);margin-bottom:1.25rem" id="badge-modal-progress"></div>
+    <div class="modal-actions" style="justify-content:center">
+      <button class="btn btn-primary" onclick="closeBadgeModal()">Got it</button>
     </div>
   </div>
 </div>
@@ -1284,25 +1299,25 @@ function japDropHTML(toggleFn) {
   return `${overlay}<div class="jap-drop"><button class="study-cat-btn${anyActive?' active':''}" onclick="toggleJapDrop()">🗾 Japanese ▾</button>${panel}</div>`;
 }
 const BADGE_DEFS  = [
-  { id:'first_answer',    emoji:'🌱', name:'First Answer',    check:(s)    => s.totalAnswered >= 1 },
-  { id:'on_fire',         emoji:'🔥', name:'On Fire',         check:(s)    => s.streak >= 7 },
-  { id:'unstoppable',     emoji:'💎', name:'Unstoppable',     check:(s)    => s.streak >= 30 },
-  { id:'centurion',       emoji:'💯', name:'Centurion',       check:(s)    => s.streak >= 100 },
-  { id:'sharp',           emoji:'🎯', name:'Sharp',           check:(s)    => s.correctCount >= 10 },
-  { id:'sharpshooter',    emoji:'🏹', name:'Sharpshooter',    check:(s)    => s.correctCount >= 50 },
-  { id:'perfect_day',     emoji:'⭐', name:'Perfect Day',     check:(s)    => s.todayCorrect && s.todayCorrect.includes('finance') && s.todayCorrect.includes('trivia') && ['japanese_n5','japanese_n4','japanese_n3'].some(c=>s.todayCorrect.includes(c)) },
-  { id:'perfect_week',    emoji:'🌟', name:'Perfect Week',    check:(s)    => s.perfectDays >= 5 },
-  { id:'point_hunter',    emoji:'💰', name:'Point Hunter',    check:(s)    => s.totalPoints >= 100 },
-  { id:'high_scorer',     emoji:'👑', name:'High Scorer',     check:(s)    => s.totalPoints >= 500 },
-  { id:'market_analyst',  emoji:'📈', name:'Market Analyst',  check:(s)    => s.financeCorrect >= 25 },
-  { id:'wall_street',     emoji:'🏦', name:'Wall Street',     check:(s)    => s.financeCorrect >= 50 },
-  { id:'nihongo_novice',  emoji:'🇯🇵', name:'Nihongo Novice', check:(s)    => (s.japanese_n5Correct||0) + (s.japanese_n4Correct||0) + (s.japanese_n3Correct||0) >= 10 },
-  { id:'nihongo_pro',     emoji:'⛩️',  name:'Nihongo Pro',    check:(s)    => (s.japanese_n5Correct||0) + (s.japanese_n4Correct||0) + (s.japanese_n3Correct||0) >= 30 },
-  { id:'trivia_master',   emoji:'🧠', name:'Trivia Master',   check:(s)    => s.triviaCorrect >= 25 },
-  { id:'know_it_all',     emoji:'🔭', name:'Know It All',     check:(s)    => s.triviaCorrect >= 50 },
-  { id:'well_rounded',    emoji:'🎓', name:'Well Rounded',    check:(s)    => s.financeCorrect >= 10 && ((s.japanese_n5Correct||0) + (s.japanese_n4Correct||0) + (s.japanese_n3Correct||0)) >= 10 && s.triviaCorrect >= 10 },
-  { id:'halfway',         emoji:'🏁', name:'Halfway There',   check:(s, n) => s.totalAnswered >= Math.floor(n / 2) },
-  { id:'legend',          emoji:'🏆', name:'Legend',          check:(s, n) => s.totalAnswered >= n },
+  { id:'first_answer',    emoji:'🌱', name:'First Answer',    hint:'Answer your first question.',                                                         check:(s)    => s.totalAnswered >= 1 },
+  { id:'on_fire',         emoji:'🔥', name:'On Fire',         hint:'Maintain a 7-day answering streak.',                                                  check:(s)    => s.streak >= 7 },
+  { id:'unstoppable',     emoji:'💎', name:'Unstoppable',     hint:'Maintain a 30-day answering streak.',                                                 check:(s)    => s.streak >= 30 },
+  { id:'centurion',       emoji:'💯', name:'Centurion',       hint:'Maintain a 100-day answering streak.',                                                check:(s)    => s.streak >= 100 },
+  { id:'sharp',           emoji:'🎯', name:'Sharp',           hint:'Get 10 correct answers across any category.',                                         check:(s)    => s.correctCount >= 10 },
+  { id:'sharpshooter',    emoji:'🏹', name:'Sharpshooter',    hint:'Get 50 correct answers across any category.',                                         check:(s)    => s.correctCount >= 50 },
+  { id:'perfect_day',     emoji:'⭐', name:'Perfect Day',     hint:'Answer at least one question correctly in every category on the same day.',           check:(s)    => s.todayCorrect && s.todayCorrect.includes('finance') && s.todayCorrect.includes('trivia') && ['japanese_n5','japanese_n4','japanese_n3'].some(c=>s.todayCorrect.includes(c)) },
+  { id:'perfect_week',    emoji:'🌟', name:'Perfect Week',    hint:'Achieve 5 perfect days (all categories answered correctly).',                         check:(s)    => s.perfectDays >= 5 },
+  { id:'point_hunter',    emoji:'💰', name:'Point Hunter',    hint:'Earn 100 total points by answering correctly.',                                       check:(s)    => s.totalPoints >= 100 },
+  { id:'high_scorer',     emoji:'👑', name:'High Scorer',     hint:'Earn 500 total points.',                                                             check:(s)    => s.totalPoints >= 500 },
+  { id:'market_analyst',  emoji:'📈', name:'Market Analyst',  hint:'Answer 25 Capital Markets questions correctly.',                                      check:(s)    => s.financeCorrect >= 25 },
+  { id:'wall_street',     emoji:'🏦', name:'Wall Street',     hint:'Answer 50 Capital Markets questions correctly.',                                      check:(s)    => s.financeCorrect >= 50 },
+  { id:'nihongo_novice',  emoji:'🇯🇵', name:'Nihongo Novice', hint:'Answer 10 Japanese (N5/N4/N3) questions correctly.',                                  check:(s)    => (s.japanese_n5Correct||0) + (s.japanese_n4Correct||0) + (s.japanese_n3Correct||0) >= 10 },
+  { id:'nihongo_pro',     emoji:'⛩️',  name:'Nihongo Pro',    hint:'Answer 30 Japanese (N5/N4/N3) questions correctly.',                                  check:(s)    => (s.japanese_n5Correct||0) + (s.japanese_n4Correct||0) + (s.japanese_n3Correct||0) >= 30 },
+  { id:'trivia_master',   emoji:'🧠', name:'Trivia Master',   hint:'Answer 25 Trivia questions correctly.',                                               check:(s)    => s.triviaCorrect >= 25 },
+  { id:'know_it_all',     emoji:'🔭', name:'Know It All',     hint:'Answer 50 Trivia questions correctly.',                                               check:(s)    => s.triviaCorrect >= 50 },
+  { id:'well_rounded',    emoji:'🎓', name:'Well Rounded',    hint:'Answer 10+ correctly in Capital Markets, Japanese, and Trivia.',                      check:(s)    => s.financeCorrect >= 10 && ((s.japanese_n5Correct||0) + (s.japanese_n4Correct||0) + (s.japanese_n3Correct||0)) >= 10 && s.triviaCorrect >= 10 },
+  { id:'halfway',         emoji:'🏁', name:'Halfway There',   hint:'Answer half of all available questions.',                                             check:(s, n) => s.totalAnswered >= Math.floor(n / 2) },
+  { id:'legend',          emoji:'🏆', name:'Legend',          hint:'Answer every available question in the question bank.',                               check:(s, n) => s.totalAnswered >= n },
 ];
 
 // =================== STATE ===================
@@ -1406,6 +1421,54 @@ function checkBadges() {
   const total = Q.finance.length + Q.japanese_n5.length + Q.japanese_n4.length + Q.japanese_n3.length + Q.trivia.length;
   return BADGE_DEFS.filter(b => !S.badges.includes(b.id) && b.check(S, total))
     .map(b => { S.badges.push(b.id); return b; });
+}
+
+function _badgeProgress(b) {
+  const total = Q.finance.length + Q.japanese_n5.length + Q.japanese_n4.length + Q.japanese_n3.length + Q.trivia.length;
+  const jpCorrect = (S.japanese_n5Correct||0) + (S.japanese_n4Correct||0) + (S.japanese_n3Correct||0);
+  const map = {
+    first_answer:   () => `Answered: ${S.totalAnswered} / 1`,
+    on_fire:        () => `Streak: ${S.streak} / 7 days`,
+    unstoppable:    () => `Streak: ${S.streak} / 30 days`,
+    centurion:      () => `Streak: ${S.streak} / 100 days`,
+    sharp:          () => `Correct: ${S.correctCount} / 10`,
+    sharpshooter:   () => `Correct: ${S.correctCount} / 50`,
+    perfect_day:    () => null,
+    perfect_week:   () => `Perfect days: ${S.perfectDays} / 5`,
+    point_hunter:   () => `Points: ${S.totalPoints} / 100`,
+    high_scorer:    () => `Points: ${S.totalPoints} / 500`,
+    market_analyst: () => `Capital Markets correct: ${S.financeCorrect} / 25`,
+    wall_street:    () => `Capital Markets correct: ${S.financeCorrect} / 50`,
+    nihongo_novice: () => `Japanese correct: ${jpCorrect} / 10`,
+    nihongo_pro:    () => `Japanese correct: ${jpCorrect} / 30`,
+    trivia_master:  () => `Trivia correct: ${S.triviaCorrect} / 25`,
+    know_it_all:    () => `Trivia correct: ${S.triviaCorrect} / 50`,
+    well_rounded:   () => `Capital Markets: ${S.financeCorrect}/10 · Japanese: ${jpCorrect}/10 · Trivia: ${S.triviaCorrect}/10`,
+    halfway:        () => `Answered: ${S.totalAnswered} / ${Math.floor(total / 2)}`,
+    legend:         () => `Answered: ${S.totalAnswered} / ${total}`,
+  };
+  return (map[b.id] || (() => null))();
+}
+
+function showBadgeDetail(id) {
+  const b = BADGE_DEFS.find(x => x.id === id);
+  if (!b) return;
+  const earned = S.badges.includes(b.id);
+  document.getElementById('badge-modal-ico').textContent   = b.emoji;
+  document.getElementById('badge-modal-name').textContent  = b.name;
+  const statusEl = document.getElementById('badge-modal-status');
+  statusEl.textContent  = earned ? '✅ Earned!' : '🔒 Locked';
+  statusEl.style.color  = earned ? 'var(--gold)' : 'var(--muted)';
+  document.getElementById('badge-modal-hint').textContent  = b.hint;
+  const prog = earned ? '' : (_badgeProgress(b) || '');
+  const progEl = document.getElementById('badge-modal-progress');
+  progEl.textContent = prog;
+  progEl.hidden = !prog;
+  document.getElementById('modal-badge').hidden = false;
+}
+
+function closeBadgeModal() {
+  document.getElementById('modal-badge').hidden = true;
 }
 
 let _toastTimer = null;
@@ -1711,7 +1774,7 @@ function renderStatsView() {
 
   const badges = BADGE_DEFS.map(b => {
     const earned = S.badges.includes(b.id);
-    return `<div class="badge ${earned ? 'earned' : ''}">
+    return `<div class="badge ${earned ? 'earned' : ''}" onclick="showBadgeDetail('${b.id}')" title="${b.hint}">
       <span class="badge-ico">${b.emoji}</span>
       <div class="badge-lbl">${b.name}</div>
     </div>`;
